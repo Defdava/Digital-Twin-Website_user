@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,11 +6,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>BRIN Tinjauan Langsung</title>
+    <title>BRIN Live Overview</title>
     <link rel="stylesheet" href="../CSS/mainstyle.css">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
 </head>
 <body>
     <video id="bg-video" autoplay muted loop>
@@ -25,67 +21,67 @@
             <span>Badan Riset Nasional</span>
         </div>
         <div class="header-right">
-            <span>Sistem Manajemen Parkir</span>
+            <span>Parking Management System</span>
         </div>
     </header>
     <aside class="toolbar" id="toolbar">
         <div class="feature-box">
-            <h3>Sistem Manajemen Parkir</h3>
+            <h3>Parking Management System</h3>
         </div>
         <div class="feature-box">
-            <button class="live-overview" onclick="window.location.href='index.html'">Tinjauan Langsung</button>
-            <button class="prev-analysis" onclick="window.location.href='previous-analysis.html'">Analisis Sebelumnya</button>
+            <button class="live-overview" onclick="window.location.href='index.html'">Live Overview</button>
+            <button class="prev-analysis" onclick="window.location.href='../HTML/previous-analysis.html'">Previous Analysis</button>
         </div>
         <div class="feature-box user-info" id="userInfo">
-            <h3>Pengguna</h3>
+            <h3>User</h3>
             <img src="../assets/user.JPG" alt="User">
-            <span>Selamat Datang Kembali</span>
+            <span>Welcome Back</span>
             <span id="userName">Defdava Haryadi</span>
-            <button class="logout">Keluar</button>
+            <button class="logout">Log Out</button>
         </div>
         <div class="feature-box">
-            <button class="export-data" onclick="window.location.href='export-data.html'">Ekspor Data</button>
-            <button class="3d-viewer-vr" onclick="window.location.href='3d-viewer-vr.html'">Penampil 3D VR</button>
-            <button class="helpdesk" onclick="window.location.href='helpdesk.html'">Bantuan</button>
-            <button class="profile" onclick="window.location.href='profile.html'">Profil</button>
-            <button class="parking-analysis" onclick="window.location.href='parking-analysis.html'">Analisis Parkir</button>
+            <button class="export-data" onclick="window.location.href='export-data.html'">Export Data</button>
+            <button class="3d-viewer-vr" onclick="window.location.href='3d-viewer-vr.html'">3D Viewer VR</button>
+            <button class="helpdesk" onclick="window.location.href='helpdesk.html'">Helpdesk</button>
+            <button class="profile" onclick="window.location.href='profile.html'">Profile</button>
+            <button class="parking-analysis" onclick="window.location.href='parking-analysis.html'">Parking Analysis</button>
         </div>
     </aside>
     <main class="main-content">
         <div class="main-content-grid">
             <div class="overview">
-                <h1>Tinjauan Langsung</h1>
+                <h1>Live Overview</h1>
                 <div class="stats">
                     <div>
-                        <span>Mobil</span>
-                        <span id="carsCount">0 / 20</span>
+                        <span>Cars</span>
+                        13 / 20
                     </div>
                     <div>
-                        <span>Slot</span>
-                        <span id="slotsAvailable">20 / 20</span>
+                        <span>Slots</span>
+                        7 / 20
                     </div>
                     <div>
-                        <span>Waktu</span>
-                        <span id="currentTime">Memuat...</span>
+                        <span>Time</span>
+                        12:25 AM
                     </div>
                     <div>
-                        <span>Pelanggan Setia</span>
-                        <span id="loyaltyCustomers">3</span>
+                        <span>Loyalty Customers</span>
+                        3
                     </div>
                     <div>
-                        <span>Total Mobil Masuk</span>
-                        <span id="totalCarsIn">74 Hari Ini</span>
+                        <span>Total Cars In</span>
+                        74 Today
                     </div>
                     <div>
-                        <span>Total Mobil Keluar</span>
-                        <span id="totalCarsOut">32 Hari Ini</span>
+                        <span>Total Cars Out</span>
+                        32 Today
                     </div>
                 </div>
             </div>
             <div class="history">
-                <h2>Riwayat</h2>
+                <h2>History</h2>
                 <div class="history-controls">
-                    <input type="text" placeholder="Cari">
+                    <input type="text" placeholder="Search">
                     <select>
                         <option>Filter</option>
                     </select>
@@ -94,73 +90,72 @@
                     <div class="history-item">
                         <span>MH 27 CA 2305</span>
                         <span>05/12/2023 - 04:42PM</span>
-                        <span class="status in">Aktif</span>
-                        <button>Lihat Detail</button>
+                        <span class="status in">Active</span>
+                        <button>View Details</button>
                     </div>
                     <div class="history-item">
                         <span>MH 41 WD 7689</span>
                         <span>05/12/2023 - 02:22AM</span>
-                        <span class="status in">Aktif</span>
-                        <button>Lihat Detail</button>
+                        <span class="status in">Active</span>
+                        <button>View Details</button>
                     </div>
                 </div>
                 <div class="pagination">
-                    <span>10 item per halaman</span>
-                    <span>1 dari 1 halaman</span>
+                    <span>10 items per page</span>
+                    <span>1 of 1 pages</span>
                 </div>
             </div>
             <div class="customers">
-                <h2>Pesan Pelanggan</h2>
+                <h2>Customers Message</h2>
                 <div class="customer-item">
                     <span>MH 27 CA 2305</span>
                     <span>Powan Kumar Jain</span>
-                    <span class="status in">Masuk</span>
+                    <span class="status in">In</span>
                 </div>
                 <div class="customer-item">
                     <span>MH 41 WD 7689</span>
                     <span>Nikunj Kelkar</span>
-                    <span class="status out">Keluar</span>
+                    <span class="status out">Out</span>
                 </div>
             </div>
             <div class="park-condition">
-                <h2>Kondisi Parkir (3D)</h2>
-                <div class="camera-placeholder" id="cameraPlaceholder">Klik untuk Memperluas</div>
+                <h2>Park Condition (3D)</h2>
+                <div class="camera-placeholder" id="cameraPlaceholder">Click to Expand</div>
             </div>
         </div>
         <div class="park-condition-2d">
-            <h2>Kondisi Parkir (2D)</h2>
+            <h2>Park Condition (2D)</h2>
             <div class="parking-lot">
                 <div class="column">
                     <div class="slot" data-slot="1"><span>1</span><div class="car"></div></div>
-                    <div class="slot" data-slot="2"><span>2</span><div class="car"></div></div>
+                    <div class="slot occupied" data-slot="2"><span>2</span><div class="car"></div></div>
                     <div class="slot" data-slot="3"><span>3</span><div class="car"></div></div>
-                    <div class="slot" data-slot="4"><span>4</span><div class="car"></div></div>
+                    <div class="slot occupied" data-slot="4"><span>4</span><div class="car"></div></div>
                     <div class="slot" data-slot="5"><span>5</span><div class="car"></div></div>
                     <div class="slot" data-slot="6"><span>6</span><div class="car"></div></div>
-                    <div class="slot" data-slot="7"><span>7</span><div class="car"></div></div>
+                    <div class="slot occupied" data-slot="7"><span>7</span><div class="car"></div></div>
                     <div class="slot" data-slot="8"><span>8</span><div class="car"></div></div>
                     <div class="slot" data-slot="9"><span>9</span><div class="car"></div></div>
                 </div>
                 <div class="column">
                     <div class="slot" data-slot="10"><span>10</span><div class="car"></div></div>
-                    <div class="slot" data-slot="11"><span>11</span><div class="car"></div></div>
+                    <div class="slot occupied" data-slot="11"><span>11</span><div class="car"></div></div>
                     <div class="slot" data-slot="12"><span>12</span><div class="car"></div></div>
-                    <div class="slot" data-slot="13"><span>13</span><div class="car"></div></div>
+                    <div class="slot occupied" data-slot="13"><span>13</span><div class="car"></div></div>
                     <div class="slot" data-slot="14"><span>14</span><div class="car"></div></div>
                     <div class="slot" data-slot="15"><span>15</span><div class="car"></div></div>
-                    <div class="slot" data-slot="16"><span>16</span><div class="car"></div></div>
+                    <div class="slot occupied" data-slot="16"><span>16</span><div class="car"></div></div>
                     <div class="slot" data-slot="17"><span>17</span><div class="car"></div></div>
                     <div class="slot" data-slot="18"><span>18</span><div class="car"></div></div>
-                    <div class="slot" data-slot="19"><span>19</span><div class="car"></div></div>
+                    <div class="slot occupied" data-slot="19"><span>19</span><div class="car"></div></div>
                     <div class="slot" data-slot="20"><span>20</span><div class="car"></div></div>
                 </div>
             </div>
         </div>
     </main>
-    <script src="../JS/app.js"></script>
-    <script src="../JS/camera.js"></script>
-    <script src="../JS/time.js"></script>
-    <script src="../JS/realtimepark.js"></script>
+    <script src="../app.js"></script>
+    <script src="../camera.js"></script>
+    <script src="../realtimeclock.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Check user session
@@ -176,26 +171,34 @@
             }
 
             // Logout handler
-            const logoutButton = document.querySelector('.logout');
-            if (logoutButton) {
-                logoutButton.addEventListener('click', () => {
-                    localStorage.removeItem('currentUser');
-                    alert('Berhasil logout!');
-                    window.location.replace('../HTML/login.html');
-                });
-            }
+            document.querySelector('.logout').addEventListener('click', () => {
+                localStorage.removeItem('currentUser');
+                alert('Berhasil logout!');
+                window.location.replace('../HTML/login.html');
+            });
 
             // Toolbar toggle animation
             const toggleToolbar = document.getElementById('toggleToolbar');
             const toolbar = document.getElementById('toolbar');
-            if (toggleToolbar && toolbar) {
-                toggleToolbar.addEventListener('click', () => {
-                    toolbar.classList.toggle('active');
-                    console.log('Toolbar toggled:', toolbar.classList.contains('active') ? 'Terlihat' : 'Tersembunyi');
+            toggleToolbar.addEventListener('click', () => {
+                toolbar.classList.toggle('active');
+            });
+
+            // Parking slot interaction
+            const slots = document.querySelectorAll('.slot');
+            slots.forEach(slot => {
+                slot.addEventListener('click', () => {
+                    if (slot.classList.contains('occupied')) {
+                        slot.classList.toggle('exiting');
+                        setTimeout(() => {
+                            slot.classList.toggle('occupied');
+                            slot.classList.remove('exiting');
+                        }, 500);
+                    } else {
+                        slot.classList.add('occupied');
+                    }
                 });
-            } else {
-                console.error('Elemen toolbar atau toggle tidak ditemukan');
-            }
+            });
 
             // Scroll functionality for history list
             const historyList = document.getElementById('historyList');
@@ -211,7 +214,7 @@
             if (cameraPlaceholder) {
                 cameraPlaceholder.addEventListener('click', () => {
                     cameraPlaceholder.classList.toggle('expanded');
-                    cameraPlaceholder.textContent = cameraPlaceholder.classList.contains('expanded') ? 'Klik untuk Menyusut' : 'Klik untuk Memperluas';
+                    cameraPlaceholder.textContent = cameraPlaceholder.classList.contains('expanded') ? 'Click to Collapse' : 'Click to Expand';
                 });
             }
 
@@ -220,7 +223,7 @@
                 if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'y' || e.key === 'Z' || e.key === 'Y')) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Undo/Redo dinonaktifkan');
+                    console.log('Undo/Redo is disabled');
                 }
             });
 
@@ -239,4 +242,3 @@
     </script>
 </body>
 </html>
-
