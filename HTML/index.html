@@ -1,0 +1,242 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>BRIN Tinjauan Langsung</title>
+    <link rel="stylesheet" href="../CSS/mainstyle.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+</head>
+<body>
+    <video id="bg-video" autoplay muted loop>
+        <source src="../assets/wave.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <header>
+        <div class="logo" id="toggleToolbar">
+            <img src="../assets/Logo_BRIN.png" alt="BRIN Logo">
+            <span>BRIN</span>
+            <span>Badan Riset Nasional</span>
+        </div>
+        <div class="header-right">
+            <span>Sistem Manajemen Parkir</span>
+        </div>
+    </header>
+    <aside class="toolbar" id="toolbar">
+        <div class="feature-box">
+            <h3>Sistem Manajemen Parkir</h3>
+        </div>
+        <div class="feature-box">
+            <button class="live-overview" onclick="window.location.href='index.html'">Tinjauan Langsung</button>
+            <button class="prev-analysis" onclick="window.location.href='previous-analysis.html'">Analisis Sebelumnya</button>
+        </div>
+        <div class="feature-box user-info" id="userInfo">
+            <h3>Pengguna</h3>
+            <img src="../assets/user.JPG" alt="User">
+            <span>Selamat Datang Kembali</span>
+            <span id="userName">Defdava Haryadi</span>
+            <button class="logout">Keluar</button>
+        </div>
+        <div class="feature-box">
+            <button class="export-data" onclick="window.location.href='export-data.html'">Ekspor Data</button>
+            <button class="3d-viewer-vr" onclick="window.location.href='3d-viewer-vr.html'">Penampil 3D VR</button>
+            <button class="helpdesk" onclick="window.location.href='helpdesk.html'">Bantuan</button>
+            <button class="profile" onclick="window.location.href='profile.html'">Profil</button>
+            <button class="parking-analysis" onclick="window.location.href='parking-analysis.html'">Analisis Parkir</button>
+        </div>
+    </aside>
+    <main class="main-content">
+        <div class="main-content-grid">
+            <div class="overview">
+                <h1>Tinjauan Langsung</h1>
+                <div class="stats">
+                    <div>
+                        <span>Mobil</span>
+                        <span id="carsCount">0 / 20</span>
+                    </div>
+                    <div>
+                        <span>Slot</span>
+                        <span id="slotsAvailable">20 / 20</span>
+                    </div>
+                    <div>
+                        <span>Waktu</span>
+                        <span id="currentTime">Memuat...</span>
+                    </div>
+                    <div>
+                        <span>Pelanggan Setia</span>
+                        <span id="loyaltyCustomers">3</span>
+                    </div>
+                    <div>
+                        <span>Total Mobil Masuk</span>
+                        <span id="totalCarsIn">74 Hari Ini</span>
+                    </div>
+                    <div>
+                        <span>Total Mobil Keluar</span>
+                        <span id="totalCarsOut">32 Hari Ini</span>
+                    </div>
+                </div>
+            </div>
+            <div class="history">
+                <h2>Riwayat</h2>
+                <div class="history-controls">
+                    <input type="text" placeholder="Cari">
+                    <select>
+                        <option>Filter</option>
+                    </select>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="history-item">
+                        <span>MH 27 CA 2305</span>
+                        <span>05/12/2023 - 04:42PM</span>
+                        <span class="status in">Aktif</span>
+                        <button>Lihat Detail</button>
+                    </div>
+                    <div class="history-item">
+                        <span>MH 41 WD 7689</span>
+                        <span>05/12/2023 - 02:22AM</span>
+                        <span class="status in">Aktif</span>
+                        <button>Lihat Detail</button>
+                    </div>
+                </div>
+                <div class="pagination">
+                    <span>10 item per halaman</span>
+                    <span>1 dari 1 halaman</span>
+                </div>
+            </div>
+            <div class="customers">
+                <h2>Pesan Pelanggan</h2>
+                <div class="customer-item">
+                    <span>MH 27 CA 2305</span>
+                    <span>Powan Kumar Jain</span>
+                    <span class="status in">Masuk</span>
+                </div>
+                <div class="customer-item">
+                    <span>MH 41 WD 7689</span>
+                    <span>Nikunj Kelkar</span>
+                    <span class="status out">Keluar</span>
+                </div>
+            </div>
+            <div class="park-condition">
+                <h2>Kondisi Parkir (3D)</h2>
+                <div class="camera-placeholder" id="cameraPlaceholder">Klik untuk Memperluas</div>
+            </div>
+        </div>
+        <div class="park-condition-2d">
+            <h2>Kondisi Parkir (2D)</h2>
+            <div class="parking-lot">
+                <div class="column">
+                    <div class="slot" data-slot="1"><span>1</span><div class="car"></div></div>
+                    <div class="slot" data-slot="2"><span>2</span><div class="car"></div></div>
+                    <div class="slot" data-slot="3"><span>3</span><div class="car"></div></div>
+                    <div class="slot" data-slot="4"><span>4</span><div class="car"></div></div>
+                    <div class="slot" data-slot="5"><span>5</span><div class="car"></div></div>
+                    <div class="slot" data-slot="6"><span>6</span><div class="car"></div></div>
+                    <div class="slot" data-slot="7"><span>7</span><div class="car"></div></div>
+                    <div class="slot" data-slot="8"><span>8</span><div class="car"></div></div>
+                    <div class="slot" data-slot="9"><span>9</span><div class="car"></div></div>
+                </div>
+                <div class="column">
+                    <div class="slot" data-slot="10"><span>10</span><div class="car"></div></div>
+                    <div class="slot" data-slot="11"><span>11</span><div class="car"></div></div>
+                    <div class="slot" data-slot="12"><span>12</span><div class="car"></div></div>
+                    <div class="slot" data-slot="13"><span>13</span><div class="car"></div></div>
+                    <div class="slot" data-slot="14"><span>14</span><div class="car"></div></div>
+                    <div class="slot" data-slot="15"><span>15</span><div class="car"></div></div>
+                    <div class="slot" data-slot="16"><span>16</span><div class="car"></div></div>
+                    <div class="slot" data-slot="17"><span>17</span><div class="car"></div></div>
+                    <div class="slot" data-slot="18"><span>18</span><div class="car"></div></div>
+                    <div class="slot" data-slot="19"><span>19</span><div class="car"></div></div>
+                    <div class="slot" data-slot="20"><span>20</span><div class="car"></div></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="../JS/app.js"></script>
+    <script src="../JS/camera.js"></script>
+    <script src="../JS/time.js"></script>
+    <script src="../JS/realtimepark.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check user session
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('userName');
+            if (!currentUser) {
+                alert('Silakan login terlebih dahulu!');
+                window.location.replace('../HTML/login.html');
+                return;
+            } else {
+                userName.textContent = currentUser.username;
+            }
+
+            // Logout handler
+            const logoutButton = document.querySelector('.logout');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    localStorage.removeItem('currentUser');
+                    alert('Berhasil logout!');
+                    window.location.replace('../HTML/login.html');
+                });
+            }
+
+            // Toolbar toggle animation
+            const toggleToolbar = document.getElementById('toggleToolbar');
+            const toolbar = document.getElementById('toolbar');
+            if (toggleToolbar && toolbar) {
+                toggleToolbar.addEventListener('click', () => {
+                    toolbar.classList.toggle('active');
+                    console.log('Toolbar toggled:', toolbar.classList.contains('active') ? 'Terlihat' : 'Tersembunyi');
+                });
+            } else {
+                console.error('Elemen toolbar atau toggle tidak ditemukan');
+            }
+
+            // Scroll functionality for history list
+            const historyList = document.getElementById('historyList');
+            if (historyList) {
+                historyList.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    historyList.scrollTop += e.deltaY;
+                });
+            }
+
+            // Camera placeholder expand functionality
+            const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+            if (cameraPlaceholder) {
+                cameraPlaceholder.addEventListener('click', () => {
+                    cameraPlaceholder.classList.toggle('expanded');
+                    cameraPlaceholder.textContent = cameraPlaceholder.classList.contains('expanded') ? 'Klik untuk Menyusut' : 'Klik untuk Memperluas';
+                });
+            }
+
+            // Prevent undo/redo navigation
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'y' || e.key === 'Z' || e.key === 'Y')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Undo/Redo dinonaktifkan');
+                }
+            });
+
+            // Prevent back/forward navigation
+            history.replaceState(null, null, window.location.href);
+            window.addEventListener('popstate', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!localStorage.getItem('currentUser')) {
+                    window.location.replace('../HTML/login.html');
+                } else {
+                    history.replaceState(null, null, window.location.href);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

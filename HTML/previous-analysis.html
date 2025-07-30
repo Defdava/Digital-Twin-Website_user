@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>BRIN Previous Analysis</title>
+    <link rel="stylesheet" href="../CSS/mainstyle.css">
+</head>
+<body>
+    <video id="bg-video" autoplay muted loop>
+        <source src="../assets/wave.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <header>
+        <div class="logo" id="toggleToolbar">
+            <img src="../assets/Logo_BRIN.png" alt="BRIN Logo">
+            <span>BRIN</span>
+            <span>Badan Riset Nasional</span>
+        </div>
+        <div class="header-right">
+            <span>Parking Management System</span>
+        </div>
+    </header>
+    <aside class="toolbar" id="toolbar">
+        <div class="feature-box">
+            <h3>Parking Management System</h3>
+        </div>
+        <div class="feature-box">
+            <button class="live-overview" onclick="window.location.href='index.html'">Live Overview</button>
+            <button class="prev-analysis" onclick="window.location.href='previous-analysis.html'">Previous Analysis</button>
+        </div>
+        <div class="feature-box user-info" id="userInfo">
+            <h3>User</h3>
+            <img src="../assets/user.JPG" alt="User">
+            <span>Welcome Back</span>
+            <span id="userName">Defdava Haryadi</span>
+            <button class="logout">Log Out</button>
+        </div>
+        <div class="feature-box">
+            <button class="export-data" onclick="window.location.href='export-data.html'">Export Data</button>
+            <button class="3d-viewer-vr" onclick="window.location.href='3d-viewer-vr.html'">3D Viewer VR</button>
+            <button class="helpdesk" onclick="window.location.href='helpdesk.html'">Helpdesk</button>
+            <button class="profile" onclick="window.location.href='profile.html'">Profile</button>
+            <button class="parking-analysis" onclick="window.location.href='parking-analysis.html'">Parking Analysis</button>
+        </div>
+    </aside>
+    <main class="main-content">
+        <div class="overview">
+            <h1>Previous Analysis</h1>
+            <div class="history">
+                <h2>Historical Parking Data</h2>
+                <div class="history-controls">
+                    <input type="text" placeholder="Search by Date or Plate">
+                    <select>
+                        <option>Filter by Month</option>
+                        <option>January</option>
+                        <option>February</option>
+                        <!-- Add more months as needed -->
+                    </select>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="history-item">
+                        <span>MH 27 CA 2305</span>
+                        <span>04/12/2023 - 03:15PM</span>
+                        <span class="status in">In</span>
+                        <button>View Details</button>
+                    </div>
+                    <div class="history-item">
+                        <span>MH 41 WD 7689</span>
+                        <span>04/12/2023 - 01:10AM</span>
+                        <span class="status out">Out</span>
+                        <button>View Details</button>
+                    </div>
+                </div>
+                <div class="pagination">
+                    <span>10 items per page</span>
+                    <span>1 of 5 pages</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="../JS/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check user session
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('userName');
+            if (!currentUser) {
+                alert('Silakan login terlebih dahulu!');
+                window.location.replace('../HTML/login.html');
+                return;
+            } else {
+                userName.textContent = currentUser.username;
+            }
+
+            // Logout handler
+            document.querySelector('.logout').addEventListener('click', () => {
+                localStorage.removeItem('currentUser');
+                alert('Berhasil logout!');
+                window.location.replace('../HTML/login.html');
+            });
+
+            // Toolbar toggle animation
+            const toggleToolbar = document.getElementById('toggleToolbar');
+            const toolbar = document.getElementById('toolbar');
+            toggleToolbar.addEventListener('click', () => {
+                toolbar.classList.toggle('active');
+            });
+
+            // Scroll functionality for history list
+            const historyList = document.getElementById('historyList');
+            if (historyList) {
+                historyList.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    historyList.scrollTop += e.deltaY;
+                });
+            }
+
+            // Prevent undo/redo navigation
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'y' || e.key === 'Z' || e.key === 'Y')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Undo/Redo is disabled');
+                }
+            });
+
+            // Prevent back/forward navigation
+            history.replaceState(null, null, window.location.href);
+            window.addEventListener('popstate', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!localStorage.getItem('currentUser')) {
+                    window.location.replace('../HTML/login.html');
+                } else {
+                    history.replaceState(null, null, window.location.href);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
