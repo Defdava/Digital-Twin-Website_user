@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "C:../HTML/login.html"
+      "destination": "../HTML/login.html"
     }
   ],
   "cleanUrls": true,
