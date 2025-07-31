@@ -2,14 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "../HTML/login.html",
+      "src": "*.html",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
+      "src": "/login",
+      "dest": "/login.html"
+    },
+    {
       "src": "/(.*)",
-      "dest": "../HTML/login.html"
+      "dest": "/index.html"
     }
   ]
 }
