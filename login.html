@@ -7,12 +7,12 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>BRIN Login</title>
-    <link rel="stylesheet" href="C:\xamppfiks\htdocs\Website_DigitalTwinParkir\CSS\style.css">
+    <link rel="stylesheet" href="C:\xamppfiks\htdocs\Website_DigitalTwinParkir\style.css">
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="../assets/Logo_BRIN.png" alt="BRIN Logo">
+            <img src="../Logo_BRIN.png" alt="BRIN Logo">
             <span>BRIN</span>
             <span>Badan Riset Nasional</span>
         </div>
@@ -37,7 +37,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Redirect to login if no user session
             if (localStorage.getItem('currentUser')) {
-                window.location.replace('../HTML/index.html');
+                window.location.replace('../index.html');
                 return;
             }
 
@@ -52,7 +52,7 @@
                     const user = auth.login(email, password);
                     alert('Login successful!');
                     localStorage.setItem('currentUser', JSON.stringify(user));
-                    window.location.replace('../HTML/index.html');
+                    window.location.replace('../index.html');
                 } catch (error) {
                     alert(error.message);
                 }
