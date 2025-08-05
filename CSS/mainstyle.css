@@ -402,3 +402,24 @@ header {
     text-decoration: none;
     font-size: 12px;
 }
+.slot .car {
+    width: 30px;
+    height: 15px;
+    background-color: red;
+    border-radius: 3px;
+    margin-top: 5px;
+    display: none;
+}
+.slot.occupied .car {
+    display: block;
+}
+.status.in {
+    color: green;
+    font-weight: bold;
+}
+
+.status.out {
+    color: red;
+    font-weight: bold;
+}
+

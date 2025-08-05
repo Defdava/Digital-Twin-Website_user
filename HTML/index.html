@@ -7,7 +7,139 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>BRIN Live Overview</title>
-    <link rel="stylesheet" href="../CSS/mainstyle.css">
+    <link rel="stylesheet" href="C:\xamppfiks\htdocs\Website_DigitalTwinParkir\CSS\mainstyle.css">
+    <style>
+        /* Styles for park-condition-2d (unchanged) */
+        .park-condition-2d h2 {
+            margin-top: 0;
+            color: #007bff;
+            font-size: 16px;
+        }
+
+        .parking-lot {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .slot {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            background-color: #e9ecef;
+            font-size: 12px;
+            border-radius: 5px;
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .slot.occupied {
+            background-color: yellow;
+        }
+
+        .slot span {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .slot .car {
+            width: 20px;
+            height: 20px;
+            background-color: #333;
+            border-radius: 3px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .slot.occupied .car {
+            display: block;
+            animation: carEnter 0.5s ease-in-out;
+        }
+
+        @keyframes carEnter {
+            from {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes carExit {
+            from {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .slot.occupied.exiting .car {
+            animation: carExit 0.5s ease-in-out forwards;
+        }
+
+        /* Updated styles for overview to match other sections */
+        .overview {
+            background-color: lightgrey;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #dc3545;
+            min-height: 150px;
+        }
+
+        .overview h1 {
+            margin: 0 0 10px;
+            color: #007bff;
+            font-size: 16px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .stats div {
+            background-color: #e9ecef;
+            padding: 6px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .stats span:first-child {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .stats span:last-child {
+            font-size: 12px;
+            color: #007bff;
+        }
+    </style>
 </head>
 <body>
     <video id="bg-video" autoplay muted loop>
@@ -16,7 +148,7 @@
     </video>
     <header>
         <div class="logo" id="toggleToolbar">
-            <img src="../assets/Logo_BRIN.png" alt="BRIN Logo">
+            <img src="C:\xamppfiks\htdocs\Website_DigitalTwinParkir\assets\Logo_BRIN.png" alt="BRIN Logo">
             <span>BRIN</span>
             <span>Badan Riset Nasional</span>
         </div>
@@ -29,22 +161,22 @@
             <h3>Parking Management System</h3>
         </div>
         <div class="feature-box">
-            <button class="live-overview" onclick="window.location.href='index.html'">Live Overview</button>
+            <button class="live-overview" onclick="window.location.href='../HTML/index.html'">Live Overview</button>
             <button class="prev-analysis" onclick="window.location.href='../HTML/previous-analysis.html'">Previous Analysis</button>
         </div>
         <div class="feature-box user-info" id="userInfo">
             <h3>User</h3>
-            <img src="../assets/user.JPG" alt="User">
+            <img src="C:\xamppfiks\htdocs\Website_DigitalTwinParkir\assets\user.JPG" alt="User">
             <span>Welcome Back</span>
             <span id="userName">Defdava Haryadi</span>
             <button class="logout">Log Out</button>
         </div>
         <div class="feature-box">
-            <button class="export-data" onclick="window.location.href='export-data.html'">Export Data</button>
-            <button class="3d-viewer-vr" onclick="window.location.href='3d-viewer-vr.html'">3D Viewer VR</button>
-            <button class="helpdesk" onclick="window.location.href='helpdesk.html'">Helpdesk</button>
-            <button class="profile" onclick="window.location.href='profile.html'">Profile</button>
-            <button class="parking-analysis" onclick="window.location.href='parking-analysis.html'">Parking Analysis</button>
+            <button class="export-data">Export Data</button>
+            <button class="3d-viewer-vr">3D Viewer VR</button>
+            <button class="helpdesk">Helpdesk</button>
+            <button class="profile">Profile</button>
+            <button class="parking-analysis">Parking Analysis</button>
         </div>
     </aside>
     <main class="main-content">
@@ -54,55 +186,34 @@
                 <div class="stats">
                     <div>
                         <span>Cars</span>
-                        13 / 20
+                        <span>13 / 20</span>
                     </div>
                     <div>
                         <span>Slots</span>
-                        7 / 20
+                        <span>7 / 20</span>
                     </div>
                     <div>
                         <span>Time</span>
-                        <span id="currentTime">12:45 AM</span> <!-- Updated to include ID -->
-                        </div>
+                        <span id="currentTime"></span>
+                    </div>
                     <div>
                         <span>Loyalty Customers</span>
-                        3
+                        <span>3</span>
                     </div>
                     <div>
                         <span>Total Cars In</span>
-                        74 Today
+                        <span>74 Today</span>
                     </div>
                     <div>
                         <span>Total Cars Out</span>
-                        32 Today
+                        <span>32 Today</span>
                     </div>
                 </div>
             </div>
             <div class="history">
-                <h2>History</h2>
-                <div class="history-controls">
-                    <input type="text" placeholder="Search">
-                    <select>
-                        <option>Filter</option>
-                    </select>
-                </div>
-                <div class="history-list" id="historyList">
-                    <div class="history-item">
-                        <span>MH 27 CA 2305</span>
-                        <span>05/12/2023 - 04:42PM</span>
-                        <span class="status in">Active</span>
-                        <button>View Details</button>
-                    </div>
-                    <div class="history-item">
-                        <span>MH 41 WD 7689</span>
-                        <span>05/12/2023 - 02:22AM</span>
-                        <span class="status in">Active</span>
-                        <button>View Details</button>
-                    </div>
-                </div>
-                <div class="pagination">
-                    <span>10 items per page</span>
-                    <span>1 of 1 pages</span>
+                <h2>Slot History</h2>
+                <div class="history-list" id="slotHistoryList">
+                    <!-- Slot history entries will be injected here -->
                 </div>
             </div>
             <div class="customers">
@@ -120,45 +231,103 @@
             </div>
             <div class="park-condition">
                 <h2>Park Condition (3D)</h2>
-                <div class="camera-placeholder" id="cameraPlaceholder">Click to Expand</div>
-            </div>
-        </div>
-        <div class="park-condition-2d">
-            <h2>Park Condition (2D)</h2>
-            <div class="parking-lot">
-                <div class="column">
-                    <div class="slot" data-slot="1"><span>1</span><div class="car"></div></div>
-                    <div class="slot occupied" data-slot="2"><span>2</span><div class="car"></div></div>
-                    <div class="slot" data-slot="3"><span>3</span><div class="car"></div></div>
-                    <div class="slot occupied" data-slot="4"><span>4</span><div class="car"></div></div>
-                    <div class="slot" data-slot="5"><span>5</span><div class="car"></div></div>
-                    <div class="slot" data-slot="6"><span>6</span><div class="car"></div></div>
-                    <div class="slot occupied" data-slot="7"><span>7</span><div class="car"></div></div>
-                    <div class="slot" data-slot="8"><span>8</span><div class="car"></div></div>
-                    <div class="slot" data-slot="9"><span>9</span><div class="car"></div></div>
+                <div id="cameraContainer" style="width: 100%; max-width: 600px; position: relative;">
+                    <video id="cameraStream" autoplay muted controls loop style="width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    <source src="C:\xamppfiks\htdocs\Website_DigitalTwinParkir\assets\WhatsApp Video 2025-08-01 at 10.18.51_e7086e9f.mp4" type="video/mp4"></video>
+
+                    <button id="toggleCameraBtn" style="position: absolute; top: 10px; left: 10px; background-color: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer;">Click to Expand</button>
                 </div>
-                <div class="column">
-                    <div class="slot" data-slot="10"><span>10</span><div class="car"></div></div>
-                    <div class="slot occupied" data-slot="11"><span>11</span><div class="car"></div></div>
-                    <div class="slot" data-slot="12"><span>12</span><div class="car"></div></div>
-                    <div class="slot occupied" data-slot="13"><span>13</span><div class="car"></div></div>
-                    <div class="slot" data-slot="14"><span>14</span><div class="car"></div></div>
-                    <div class="slot" data-slot="15"><span>15</span><div class="car"></div></div>
-                    <div class="slot occupied" data-slot="16"><span>16</span><div class="car"></div></div>
-                    <div class="slot" data-slot="17"><span>17</span><div class="car"></div></div>
-                    <div class="slot" data-slot="18"><span>18</span><div class="car"></div></div>
-                    <div class="slot occupied" data-slot="19"><span>19</span><div class="car"></div></div>
-                    <div class="slot" data-slot="20"><span>20</span><div class="car"></div></div>
+            </div>
+            <div class="park-condition-2d">
+                <h2>Park Condition (2D)</h2>
+                <div class="parking-lot">
+                    <div class="column">
+                        <div class="slot" data-slot="1"><span>1</span><div class="car"></div></div>
+                        <div class="slot" data-slot="2"><span>2</span><div class="car"></div></div>
+                        <div class="slot" data-slot="3"><span>3</span><div class="car"></div></div>
+                        <div class="slot" data-slot="4"><span>4</span><div class="car"></div></div>
+                        <div class="slot" data-slot="5"><span>5</span><div class="car"></div></div>
+                        <div class="slot" data-slot="6"><span>6</span><div class="car"></div></div>
+                        <div class="slot" data-slot="7"><span>7</span><div class="car"></div></div>
+                        <div class="slot" data-slot="8"><span>8</span><div class="car"></div></div>
+                        <div class="slot" data-slot="9"><span>9</span><div class="car"></div></div>
+                        <div class="slot" data-slot="10"><span>10</span><div class="car"></div></div>
+                        <div class="slot" data-slot="11"><span>11</span><div class="car"></div></div>
+                    </div>
+                    <div class="column">
+                        <div class="slot" data-slot="12"><span>12</span><div class="car"></div></div>
+                        <div class="slot" data-slot="13"><span>13</span><div class="car"></div></div>
+                        <div class="slot" data-slot="14"><span>14</span><div class="car"></div></div>
+                        <div class="slot" data-slot="15"><span>15</span><div class="car"></div></div>
+                        <div class="slot" data-slot="16"><span>16</span><div class="car"></div></div>
+                        <div class="slot" data-slot="17"><span>17</span><div class="car"></div></div>
+                        <div class="slot" data-slot="18"><span>18</span><div class="car"></div></div>
+                        <div class="slot" data-slot="19"><span>19</span><div class="car"></div></div>
+                        <div class="slot" data-slot="20"><span>20</span><div class="car"></div></div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="../app.js"></script>
     <script src="../camera.js"></script>
+    <script src="../realtimeclock.js"></script>
     <script src="../time.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check user session
+        const firebaseConfig = {
+            apiKey: "AIzaSyAef3SJwvVVTunr6CWki79aenfpXlgYc0s",
+            authDomain: "digitaltwinparkingbrin.firebaseapp.com",
+            databaseURL: "https://digitaltwinparkingbrin-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "digitaltwinparkingbrin",
+            storageBucket: "digitaltwinparkingbrin.appspot.com",
+            messagingSenderId: "608462498913",
+            appId: "1:608462498913:web:73695d8c91f923e2db8e20",
+            measurementId: "G-F1TRY65RTG"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const dbRef = firebase.database().ref("slot_parking");
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Real-time clock update
+            function updateTime() {
+                const now = new Date();
+                // Adjust to WIB (UTC+7)
+                const wibOffset = 7 * 60 * 60 * 1000;
+                const wibTime = new Date(now.getTime() + wibOffset);
+                const hours = wibTime.getUTCHours().toString().padStart(2, '0');
+                const minutes = wibTime.getUTCMinutes().toString().padStart(2, '0');
+                const seconds = wibTime.getUTCSeconds().toString().padStart(2, '0');
+                const timeString = `${hours}:${minutes}:${seconds} WIB`;
+                document.getElementById('currentTime').textContent = timeString;
+            }
+
+            updateTime();
+            setInterval(updateTime, 1000);
+
+            // Firebase slot update logic
+            dbRef.on("value", (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                for (let i = 1; i <= 20; i++) {
+                    const slotKey = `slot_${i}`;
+                    const slotEl = document.querySelector(`.slot[data-slot="${i}"]`);
+                    if (!slotEl) continue;
+
+                    if (data[slotKey]) {
+                        slotEl.classList.add("occupied");
+                        slotEl.querySelector(".car").style.display = "block";
+                    } else {
+                        slotEl.classList.remove("occupied");
+                        slotEl.querySelector(".car").style.display = "none";
+                    }
+                }
+            });
+
+            // Existing JavaScript
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             const userInfo = document.getElementById('userInfo');
             const userName = document.getElementById('userName');
@@ -170,21 +339,18 @@
                 userName.textContent = currentUser.username;
             }
 
-            // Logout handler
             document.querySelector('.logout').addEventListener('click', () => {
                 localStorage.removeItem('currentUser');
                 alert('Berhasil logout!');
                 window.location.replace('../HTML/login.html');
             });
 
-            // Toolbar toggle animation
             const toggleToolbar = document.getElementById('toggleToolbar');
             const toolbar = document.getElementById('toolbar');
             toggleToolbar.addEventListener('click', () => {
                 toolbar.classList.toggle('active');
             });
 
-            // Parking slot interaction
             const slots = document.querySelectorAll('.slot');
             slots.forEach(slot => {
                 slot.addEventListener('click', () => {
@@ -200,7 +366,6 @@
                 });
             });
 
-            // Scroll functionality for history list
             const historyList = document.getElementById('historyList');
             if (historyList) {
                 historyList.addEventListener('wheel', (e) => {
@@ -209,7 +374,6 @@
                 });
             }
 
-            // Camera placeholder expand functionality
             const cameraPlaceholder = document.getElementById('cameraPlaceholder');
             if (cameraPlaceholder) {
                 cameraPlaceholder.addEventListener('click', () => {
@@ -218,25 +382,52 @@
                 });
             }
 
-            // Prevent undo/redo navigation
-            document.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'y' || e.key === 'Z' || e.key === 'Y')) {
-                    e.preventDefault();
-                    e.stopPropagation();
+            document.addEventListener('keydown', (event) => {
+                if ((event.ctrlKey || event.metaKey) && (event.key === 'z' || event.key === 'y' || event.key === 'Z' || event.key === 'Y')) {
+                    event.preventDefault();
+                    event.stopPropagation();
                     console.log('Undo/Redo is disabled');
                 }
             });
 
-            // Prevent back/forward navigation
             history.replaceState(null, null, window.location.href);
-            window.addEventListener('popstate', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            window.addEventListener('popstate', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
                 if (!localStorage.getItem('currentUser')) {
                     window.location.replace('../HTML/login.html');
                 } else {
                     history.replaceState(null, null, window.location.href);
                 }
+            });
+
+            const slotHistoryRef = firebase.database().ref("slot_history");
+            slotHistoryRef.on("value", (snapshot) => {
+                const historyData = snapshot.val();
+                const slotHistoryList = document.getElementById("slotHistoryList");
+                slotHistoryList.innerHTML = "";
+
+                if (!historyData) return;
+
+                Object.keys(historyData)
+                    .sort((a, b) => {
+                        const aNum = parseInt(a.split("_")[1]);
+                        const bNum = parseInt(b.split("_")[1]);
+                        return aNum - bNum;
+                    })
+                    .forEach((slotKey) => {
+                        const slotLogs = historyData[slotKey];
+                        Object.entries(slotLogs).forEach(([timestamp, status]) => {
+                            const div = document.createElement("div");
+                            div.className = "history-item";
+                            div.innerHTML = `
+                                <span><strong>Slot ${slotKey.split("_")[1]}</strong></span>
+                                <span>${timestamp}</span>
+                                <span class="status ${status === 'terisi' ? 'in' : 'out'}">${status}</span>
+                            `;
+                            slotHistoryList.appendChild(div);
+                        });
+                    });
             });
         });
     </script>
