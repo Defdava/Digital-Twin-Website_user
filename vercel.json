@@ -6,6 +6,8 @@
   ],
   "routes": [
     { "src": "/style.css", "dest": "/style.css" },
+    { "src": "/app.js", "dest": "/app.js" },
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
     { "src": "/login", "dest": "/login.html" },
     { "src": "/register", "dest": "/register.html" },
     { "src": "/forgot-password", "dest": "/forgot-password.html" },
