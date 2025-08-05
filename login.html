@@ -7,158 +7,12 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>BRIN Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #d3d3d3;
-            color: #333;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            z-index: -1;
-            animation: slideshow 20s infinite;
-        }
-
-        header {
-            background-image: linear-gradient(to right, lightseagreen, palevioletred);
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .logo img {
-            height: 40px;
-            vertical-align: middle;
-        }
-
-        .logo span {
-            margin-left: 10px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-        }
-
-        .header-right span {
-            margin-right: 20px;
-            font-size: 14px;
-        }
-
-        .login-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
-            padding-top: 80px;
-        }
-
-        .welcome-message {
-            color: whitesmoke;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-            width: 300px;
-        }
-
-        .login-box {
-            background-color: rgba(89, 158, 163, 0.4);
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-            text-align: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .login-box h2 {
-            margin-top: 0;
-            color: whitesmoke;
-            font-size: 20px;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 14px;
-            background-color: rgba(255, 255, 255, 1);
-        }
-
-        .login-box button {
-            width: 100%;
-            padding: 10px;
-            background-image: linear-gradient(to bottom, lightseagreen, palevioletred);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .login-box a {
-            display: block;
-            margin: 10px 0;
-            color: whitesmoke;
-            text-decoration: none;
-            font-size: 12px;
-        }
-
-        @keyframes slideshow {
-            0% { background-image: url('/assets/fotobrin.jpg'); opacity: 0.2; }
-            15% { background-image: url('/assets/fotobrin.jpg'); opacity: 0.2; }
-            20% { background-image: url('/assets/fotobrin.jpg'); opacity: 0; }
-            20.01% { background-image: url('/assets/fotobrin1.jpg'); opacity: 0; }
-            35% { background-image: url('/assets/fotobrin1.jpg'); opacity: 0.2; }
-            40% { background-image: url('/assets/fotobrin1.jpg'); opacity: 0; }
-            40.01% { background-image: url('/assets/fotobrin2.jpg'); opacity: 0; }
-            55% { background-image: url('/assets/fotobrin2.jpg'); opacity: 0.2; }
-            60% { background-image: url('/assets/fotobrin4.jpg'); opacity: 0; }
-            60.01% { background-image: url('/assets/fotobrin4.jpg'); opacity: 0; }
-            75% { background-image: url('/assets/fotobrin4.jpg'); opacity: 0.2; }
-            80% { background-image: url('/assets/fotobrin4.jpg'); opacity: 0; }
-            80.01% { background-image: url('/assets/fotobrin3.jpg'); opacity: 0; }
-            95% { background-image: url('/assets/fotobrin3.jpg'); opacity: 0.2; }
-            100% { background-image: url('/assets/fotobrin3.jpg'); opacity: 0; }
-        }
-    </style>
+    <link rel="stylesheet" href="https://github.com/Defdava/Digital-Twin-Website-used.git/style.css">
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fid.m.wikipedia.org%2Fwiki%2FBerkas%3AMain_Logo_of_National_Research_and_Innovation_Agency_of_Indonesia.svg&psig=AOvVaw3FI53mdFpxTUofZ0e5clYq&ust=1754468166668000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJCGl7Gd844DFQAAAAAdAAAAABAE" alt="BRIN Logo">
+            <img src="../Logo_BRIN.png" alt="BRIN Logo">
             <span>BRIN</span>
             <span>Badan Riset Nasional</span>
         </div>
@@ -175,14 +29,14 @@
                 <input type="password" id="loginPassword" placeholder="Password" required>
                 <a href="/forgot-password.html">Forgot Password? Click Here</a>
                 <button type="submit">Login</button>
-                <a href="/register.html">Don't have account? Click Here</a>
+                <a href="../register.html">Don't have account? Click Here</a>
             </form>
         </div>
     </div>
-    <script src="/app.js"></script>
+    <script src="../app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Redirect to index.html if already logged in
+            // Redirect to login if no user session
             if (localStorage.getItem('currentUser')) {
                 window.location.replace('/index.html');
                 return;
