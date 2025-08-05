@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>BRIN Login</title>
+    <link rel="stylesheet" href="C:\xamppfiks\htdocs\Website_DigitalTwinParkir\CSS\style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="../assets/Logo_BRIN.png" alt="BRIN Logo">
+            <span>BRIN</span>
+            <span>Badan Riset Nasional</span>
+        </div>
+        <div class="header-right">
+            <span>Parking Management System</span>
+        </div>
+    </header>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>LOGIN</h2>
+            <form id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <a href="forgot-password.html">Forgot Password? Click Here</a>
+                <button type="submit">Login</button>
+                <a href="register.html">Don't have account? Click Here</a>
+            </form>
+        </div>
+    </div>
+    <script src="../app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Redirect to login if no user session
+            if (localStorage.getItem('currentUser')) {
+                window.location.replace('../HTML/index.html');
+                return;
+            }
+
+            // Login handler
+            const loginForm = document.getElementById('loginForm');
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                try {
+                    const user = auth.login(email, password);
+                    alert('Login successful!');
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    window.location.replace('../HTML/index.html');
+                } catch (error) {
+                    alert(error.message);
+                }
+            });
+
+            // Prevent undo/redo navigation
+            document.addEventListener('keydown', (event) => {
+                if ((event.ctrlKey || event.metaKey) && (event.key === 'z' || event.key === 'y' || event.key === 'Z' || event.key === 'Y')) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    console.log('Undo/Redo is disabled');
+                }
+            });
+
+            // Prevent back/forward navigation
+            history.replaceState(null, null, window.location.href);
+            window.addEventListener('popstate', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                history.replaceState(null, null, window.location.href);
+            });
+        });
+    </script>
