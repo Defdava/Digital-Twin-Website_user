@@ -36,7 +36,7 @@
     },
     {
       "src": "/.*",
-      "dest": "/index.html"
+      "dest": "../Website_DigitalTwinParkir/HTML/index.html"
     }
   ]
 }
