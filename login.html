@@ -12,7 +12,7 @@
 <body>
     <header>
         <div class="logo">
-            <img src="Logo_BRIN.png" alt="BRIN Logo">
+            <img src="/assets/Logo_BRIN.png" alt="BRIN Logo">
             <span>BRIN</span>
             <span>Badan Riset Nasional</span>
         </div>
@@ -21,23 +21,24 @@
         </div>
     </header>
     <div class="login-container">
+        <div class="welcome-message">Welcome to BRIN Parking System</div>
         <div class="login-box">
             <h2>LOGIN</h2>
             <form id="loginForm">
                 <input type="email" id="loginEmail" placeholder="Email" required>
                 <input type="password" id="loginPassword" placeholder="Password" required>
-                <a href="forgot-password.html">Forgot Password? Click Here</a>
+                <a href="/forgot-password.html">Forgot Password? Click Here</a>
                 <button type="submit">Login</button>
-                <a href="register.html">Don't have account? Click Here</a>
+                <a href="/register.html">Don't have account? Click Here</a>
             </form>
         </div>
     </div>
-    <script src="../app.js"></script>
+    <script src="/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Redirect to login if no user session
             if (localStorage.getItem('currentUser')) {
-                window.location.replace('../index.html');
+                window.location.replace('/index.html');
                 return;
             }
 
@@ -52,7 +53,7 @@
                     const user = auth.login(email, password);
                     alert('Login successful!');
                     localStorage.setItem('currentUser', JSON.stringify(user));
-                    window.location.replace('../index.html');
+                    window.location.replace('/index.html');
                 } catch (error) {
                     alert(error.message);
                 }
@@ -76,3 +77,5 @@
             });
         });
     </script>
+</body>
+</html>
