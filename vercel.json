@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     { "src": "*.html", "use": "@vercel/static" },
-    { "src": "https://github.com/Defdava/Digital-Twin-Website-used/blob/main/style.css", "use": "@vercel/static" }
+    { "src": ".*\\.(css|js|png|jpg|jpeg|gif|svg|ico)", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/style.css", "dest": "/style.css" },
