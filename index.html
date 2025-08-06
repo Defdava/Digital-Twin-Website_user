@@ -485,9 +485,7 @@
             <div class="park-condition">
                 <h2>Park Condition (3D)</h2>
                 <div id="cameraContainer" style="width: 100%; max-width: 600px; position: relative;">
-                    <video id="cameraStream" autoplay muted controls loop style="width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                        <source src="/assets/WhatsApp Video 2025-08-01 at 10.18.51_e7086e9f.mp4" type="video/mp4">
-                    </video>
+                    <video id="cameraStream" autoplay style="width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"></video>
                     <button id="toggleCameraBtn">Click to Expand</button>
                 </div>
             </div>
@@ -693,15 +691,45 @@
                     });
             });
 
-            // Camera toggle
+            // Camera toggle and webcam initialization
             const toggleCameraBtn = document.getElementById('toggleCameraBtn');
             const cameraContainer = document.getElementById('cameraContainer');
+            const cameraStream = document.getElementById('cameraStream');
             let isExpanded = false;
 
+            // Initialize webcam
+            async function startWebcam() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: true,
+                        audio: false
+                    });
+                    cameraStream.srcObject = stream;
+                    cameraStream.play();
+                } catch (error) {
+                    console.error('Error accessing webcam:', error);
+                    alert('Gagal mengakses kamera. Pastikan Anda memberikan izin kamera atau perangkat Anda memiliki kamera yang mendukung.');
+                    cameraStream.style.display = 'none';
+                    toggleCameraBtn.style.display = 'none';
+                }
+            }
+
+            // Start webcam on load
+            startWebcam();
+
+            // Toggle camera size
             toggleCameraBtn.addEventListener('click', () => {
                 isExpanded = !isExpanded;
                 cameraContainer.style.maxWidth = isExpanded ? '100%' : '600px';
                 toggleCameraBtn.textContent = isExpanded ? 'Click to Collapse' : 'Click to Expand';
+            });
+
+            // Stop webcam stream when page is unloaded
+            window.addEventListener('unload', () => {
+                if (cameraStream.srcObject) {
+                    const tracks = cameraStream.srcObject.getTracks();
+                    tracks.forEach(track => track.stop());
+                }
             });
 
             // Prevent undo/redo navigation
