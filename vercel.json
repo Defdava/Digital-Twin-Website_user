@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     { "src": "*.html", "use": "@vercel/static" },
-    { "src": ".*\\.(css|js|png|jpg|jpeg|gif|svg|ico)", "use": "@vercel/static" }
+    { "src": "/style.css", "dest": "/path/to/style.css" } 
   ],
   "routes": [
     { "src": "/style.css", "dest": "/style.css" },
