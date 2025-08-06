@@ -391,10 +391,11 @@
             width: 100%;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none; /* Initially hidden until expanded */
         }
 
         #cameraError {
-            display: none;
+            display: block;
             color: red;
             font-size: 12px;
             text-align: center;
@@ -494,7 +495,7 @@
                 <h2>Park Condition (3D)</h2>
                 <div id="cameraContainer" style="width: 100%; max-width: 600px; position: relative;">
                     <video id="cameraStream" autoplay style="width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"></video>
-                    <div id="cameraError">Kamera tidak tersedia. Pastikan perangkat Anda memiliki kamera dan izinkan akses.</div>
+                    <div id="cameraError">Kamera dimatikan. Klik tombol untuk mengaktifkan kamera.</div>
                     <button id="toggleCameraBtn">Click to Expand</button>
                 </div>
             </div>
@@ -706,42 +707,56 @@
             const cameraStream = document.getElementById('cameraStream');
             const cameraError = document.getElementById('cameraError');
             let isExpanded = false;
+            let stream = null;
 
             // Initialize webcam
             async function startWebcam() {
                 try {
-                    const stream = await navigator.mediaDevices.getUserMedia({
+                    stream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: 'environment' }, // Prefer rear camera if available
                         audio: false
                     });
                     cameraStream.srcObject = stream;
                     cameraStream.play();
+                    cameraStream.style.display = 'block';
                     cameraError.style.display = 'none';
-                    toggleCameraBtn.style.display = 'block';
                 } catch (error) {
                     console.error('Error accessing webcam:', error);
                     cameraStream.style.display = 'none';
-                    toggleCameraBtn.style.display = 'none';
+                    cameraError.textContent = 'Kamera tidak tersedia. Pastikan perangkat Anda memiliki kamera dan izinkan akses.';
                     cameraError.style.display = 'block';
                 }
             }
 
-            // Start webcam on load
-            startWebcam();
+            // Stop webcam
+            function stopWebcam() {
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    stream = null;
+                }
+                cameraStream.srcObject = null;
+                cameraStream.style.display = 'none';
+                cameraError.textContent = 'Kamera dimatikan. Klik tombol untuk mengaktifkan kamera.';
+                cameraError.style.display = 'block';
+            }
 
-            // Toggle camera size
+            // Toggle camera size and webcam state
             toggleCameraBtn.addEventListener('click', () => {
                 isExpanded = !isExpanded;
                 cameraContainer.style.maxWidth = isExpanded ? '100%' : '600px';
                 toggleCameraBtn.textContent = isExpanded ? 'Click to Collapse' : 'Click to Expand';
+
+                if (isExpanded) {
+                    startWebcam();
+                } else {
+                    stopWebcam();
+                }
             });
 
             // Stop webcam stream when page is unloaded
             window.addEventListener('unload', () => {
-                if (cameraStream.srcObject) {
-                    const tracks = cameraStream.srcObject.getTracks();
-                    tracks.forEach(track => track.stop());
-                }
+                stopWebcam();
             });
 
             // Prevent undo/redo navigation
