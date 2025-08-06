@@ -392,16 +392,24 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
+
+        #cameraError {
+            display: none;
+            color: red;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <video id="bg-video" autoplay muted loop>
-        <source src="https://github.com/Defdava/Digital-Twin-Website-used/blob/main/wave.mp4?raw=true" type="video/mp4">
+        <source src="https://github.com/Defdava/Digital-Twin-Website-used/blob/main/wave.mp4?true=false" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     <header>
         <div class="logo" id="toggleToolbar">
-            <img src="/assets/Logo_BRIN.png" alt="BRIN Logo">
+            <img src="https://github.com/Defdava/Digital-Twin-Website-used/blob/main/Logo_BRIN.png?raw=true" alt="BRIN Logo">
             <span>BRIN</span>
             <span>Badan Riset Nasional</span>
         </div>
@@ -486,6 +494,7 @@
                 <h2>Park Condition (3D)</h2>
                 <div id="cameraContainer" style="width: 100%; max-width: 600px; position: relative;">
                     <video id="cameraStream" autoplay style="width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"></video>
+                    <div id="cameraError">Kamera tidak tersedia. Pastikan perangkat Anda memiliki kamera dan izinkan akses.</div>
                     <button id="toggleCameraBtn">Click to Expand</button>
                 </div>
             </div>
@@ -695,22 +704,25 @@
             const toggleCameraBtn = document.getElementById('toggleCameraBtn');
             const cameraContainer = document.getElementById('cameraContainer');
             const cameraStream = document.getElementById('cameraStream');
+            const cameraError = document.getElementById('cameraError');
             let isExpanded = false;
 
             // Initialize webcam
             async function startWebcam() {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({
-                        video: true,
+                        video: { facingMode: 'environment' }, // Prefer rear camera if available
                         audio: false
                     });
                     cameraStream.srcObject = stream;
                     cameraStream.play();
+                    cameraError.style.display = 'none';
+                    toggleCameraBtn.style.display = 'block';
                 } catch (error) {
                     console.error('Error accessing webcam:', error);
-                    alert('Gagal mengakses kamera. Pastikan Anda memberikan izin kamera atau perangkat Anda memiliki kamera yang mendukung.');
                     cameraStream.style.display = 'none';
                     toggleCameraBtn.style.display = 'none';
+                    cameraError.style.display = 'block';
                 }
             }
 
