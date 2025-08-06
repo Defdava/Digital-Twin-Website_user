@@ -448,11 +448,11 @@
                 <div class="stats">
                     <div>
                         <span>Cars</span>
-                        <span>13 / 20</span>
+                        <span id="occupiedSlots">0 / 20</span>
                     </div>
                     <div>
                         <span>Slots</span>
-                        <span>7 / 20</span>
+                        <span id="emptySlots">20 / 20</span>
                     </div>
                     <div>
                         <span>Time</span>
@@ -639,9 +639,18 @@
             // Firebase slot update logic
             dbRef.on("value", (snapshot) => {
                 const data = snapshot.val();
-                if (!data) return;
+                if (!data) {
+                    // If no data, assume all slots are empty
+                    document.getElementById('occupiedSlots').textContent = '0 / 20';
+                    document.getElementById('emptySlots').textContent = '20 / 20';
+                    return;
+                }
 
-                for (let i = 1; i <= 20; i++) {
+                let occupiedCount = 0;
+                const totalSlots = 20;
+
+                // Update slot visuals and count occupied slots
+                for (let i = 1; i <= totalSlots; i++) {
                     const slotKey = `slot_${i}`;
                     const slotEl = document.querySelector(`.slot[data-slot="${i}"]`);
                     if (!slotEl) continue;
@@ -649,11 +658,17 @@
                     if (data[slotKey]) {
                         slotEl.classList.add("occupied");
                         slotEl.querySelector(".car").style.display = "block";
+                        occupiedCount++;
                     } else {
                         slotEl.classList.remove("occupied");
                         slotEl.querySelector(".car").style.display = "none";
                     }
                 }
+
+                // Update Live Overview
+                const emptyCount = totalSlots - occupiedCount;
+                document.getElementById('occupiedSlots').textContent = `${occupiedCount} / ${totalSlots}`;
+                document.getElementById('emptySlots').textContent = `${emptyCount} / ${totalSlots}`;
             });
 
             // Slot click handler
