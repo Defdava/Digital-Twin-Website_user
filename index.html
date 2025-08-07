@@ -442,8 +442,9 @@
 
         #toggle-status {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: #4CAF50;
             color: white;
             border: none;
@@ -852,7 +853,12 @@
                 });
             });
 
-            // Initialize car visibility based on slotStatuses
+            // Update car visibility based on latest Firebase data
+            updateCarsFromFirebase();
+        }
+
+        // Update Cars Based on Firebase Data
+        function updateCarsFromFirebase() {
             for (let i = 1; i <= 20; i++) {
                 const slotKey = `slot_${i}`;
                 if (slotStatuses[slotKey]) {
@@ -862,6 +868,15 @@
                         cars[i-1].currentOpacity = 1;
                         cars[i-1].currentScale = 1;
                         cars[i-1].mesh.scale.set(1, 1, 1);
+                        cars[i-1].isAnimating = false;
+                    }
+                } else {
+                    if (cars[i-1]) {
+                        cars[i-1].targetOpacity = 0;
+                        cars[i-1].targetScale = 0;
+                        cars[i-1].currentOpacity = 0;
+                        cars[i-1].currentScale = 0;
+                        cars[i-1].mesh.scale.set(0, 0, 0);
                         cars[i-1].isAnimating = false;
                     }
                 }
@@ -957,7 +972,7 @@
             renderer.render(scene, camera);
         }
 
-        // Camera Controls (from provided code)
+        // Camera Controls
         window.resetCamera = function() {
             camera.position.set(0, 20, 40);
             camera.lookAt(0, 0, 0);
@@ -1198,6 +1213,16 @@
                     threeContainer.style.display = 'block';
                     if (!isThreeInitialized) {
                         initThree();
+                    } else {
+                        // Reinitialize renderer and update cars based on Firebase data
+                        const threeContainer = document.getElementById('threeContainer');
+                        renderer = new THREE.WebGLRenderer({ antialias: true });
+                        renderer.setSize(threeContainer.clientWidth, threeContainer.clientHeight || 300);
+                        renderer.shadowMap.enabled = true;
+                        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                        threeContainer.appendChild(renderer.domElement);
+                        updateCarsFromFirebase();
+                        animate();
                     }
                 } else {
                     console.log("Collapsing 3D view");
