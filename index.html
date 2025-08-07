@@ -391,7 +391,7 @@
         #cameraContainer {
             width: 100%;
             position: relative;
-            min-height: 300px; /* Ensure container has height */
+            min-height: 300px;
         }
 
         #threeContainer {
@@ -793,6 +793,7 @@
                 const car = new THREE.Mesh(carGeometry, carMaterial);
                 car.position.set(slotData.position.x, 0.5, slotData.position.z);
                 car.castShadow = true;
+                car.scale.set(0, 0, 0); // Initial scale for animation
                 scene.add(car);
                 
                 cars.push({
@@ -801,12 +802,29 @@
                     slotIndex: slotData.slotNumber,
                     targetOpacity: 0,
                     currentOpacity: 0,
+                    targetScale: 0,
+                    currentScale: 0,
                     animationSpeed: 0.05,
                     isAnimating: false,
                     bobOffset: Math.random() * Math.PI * 2,
                     originalY: car.position.y
                 });
             });
+
+            // Initialize car visibility based on current slotStatuses
+            for (let i = 1; i <= 20; i++) {
+                const slotKey = `slot_${i}`;
+                if (slotStatuses[slotKey]) {
+                    if (cars[i-1]) {
+                        cars[i-1].targetOpacity = 1;
+                        cars[i-1].targetScale = 1;
+                        cars[i-1].currentOpacity = 1;
+                        cars[i-1].currentScale = 1;
+                        cars[i-1].mesh.scale.set(1, 1, 1);
+                        cars[i-1].isAnimating = false;
+                    }
+                }
+            }
         }
 
         // Update Status Panel
@@ -846,26 +864,34 @@
             animationFrame = requestAnimationFrame(animate);
             
             const time = Date.now() * 0.001;
-            let animatingCars = 0;
-            let visibleCars = 0;
-
             cars.forEach((car, index) => {
                 if (car.isAnimating) {
-                    animatingCars++;
-                    const diff = car.targetOpacity - car.currentOpacity;
-                    
-                    if (Math.abs(diff) < 0.01) {
-                        car.currentOpacity = car.targetOpacity;
-                        car.isAnimating = false;
+                    // Animate opacity
+                    const opacityDiff = car.targetOpacity - car.currentOpacity;
+                    if (Math.abs(opacityDiff) > 0.01) {
+                        car.currentOpacity += opacityDiff * car.animationSpeed;
+                        car.material.opacity = car.currentOpacity;
                     } else {
-                        car.currentOpacity += diff * car.animationSpeed;
+                        car.currentOpacity = car.targetOpacity;
                     }
                     
-                    car.material.opacity = car.currentOpacity;
+                    // Animate scale
+                    const scaleDiff = car.targetScale - car.currentScale;
+                    if (Math.abs(scaleDiff) > 0.01) {
+                        car.currentScale += scaleDiff * car.animationSpeed;
+                        car.mesh.scale.set(car.currentScale, car.currentScale, car.currentScale);
+                    } else {
+                        car.currentScale = car.targetScale;
+                    }
+                    
+                    // Stop animation when both are close enough
+                    if (Math.abs(opacityDiff) < 0.01 && Math.abs(scaleDiff) < 0.01) {
+                        car.isAnimating = false;
+                    }
                 }
                 
+                // Bobbing effect for visible cars
                 if (car.currentOpacity > 0.1) {
-                    visibleCars++;
                     const bobAmount = 0.05;
                     car.mesh.position.y = car.originalY + Math.sin(time * 2 + car.bobOffset) * bobAmount;
                 }
@@ -991,6 +1017,11 @@
                 let occupiedCount = 0;
                 const totalSlots = 20;
 
+                // Initialize slotStatuses if not already set
+                for (let i = 1; i <= totalSlots; i++) {
+                    slotStatuses[`slot_${i}`] = false;
+                }
+
                 if (!data) {
                     document.getElementById('occupiedSlots').textContent = '0 / 20';
                     document.getElementById('emptySlots').textContent = '20 / 20';
@@ -1003,6 +1034,7 @@
                         slotStatuses[`slot_${i}`] = false;
                         if (cars[i-1]) {
                             cars[i-1].targetOpacity = 0;
+                            cars[i-1].targetScale = 0;
                             cars[i-1].isAnimating = true;
                         }
                     }
@@ -1029,6 +1061,7 @@
 
                     if (cars[i-1]) {
                         cars[i-1].targetOpacity = newStatus ? 1 : 0;
+                        cars[i-1].targetScale = newStatus ? 1 : 0;
                         cars[i-1].isAnimating = true;
                     }
                 }
