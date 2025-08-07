@@ -24,8 +24,8 @@
             width: 100%;
             height: 100%;
             background: none;
-            opacity: 0.2; /* Opacity 20% for background video */
-            z-index: -1; /* Keep behind content */
+            opacity: 0.2;
+            z-index: -1;
         }
 
         video#bg-video {
@@ -34,8 +34,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ensure video covers the area */
-            z-index: -2; /* Behind the ::before pseudo-element */
+            object-fit: cover;
+            z-index: -2;
             opacity: 0.4;
         }
 
@@ -81,26 +81,26 @@
         }
 
         .main-content {
-            margin-left: 0; /* Tidak ada margin kiri karena toolbar ada di kiri */
+            margin-left: 0;
             padding: 80px 20px 20px;
             min-height: 100vh;
         }
 
         .main-content-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 columns for 2x2 layout */
-            gap: 15px; /* Spacing between sections */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             margin-bottom: 20px;
         }
 
         .toolbar {
             position: fixed;
             top: 60px;
-            left: -400px; /* Mulai tersembunyi di kiri */
-            width: 200px; /* Lebar toolbar lebih kecil */
+            left: -400px;
+            width: 200px;
             height: 100%;
             background-image: linear-gradient(to bottom, lightseagreen, palevioletred);
-            padding: 15px; /* Padding lebih kecil untuk tampilan minimalis */
+            padding: 15px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             transition: left 0.3s ease-in-out;
             z-index: 999;
@@ -108,34 +108,34 @@
         }
 
         .toolbar.active {
-            left: 0; /* Muncul saat aktif */
+            left: 0;
         }
 
         .toolbar .feature-box {
-            background-color: lightgrey; /* Warna merah BRIN untuk kotak fitur */
+            background-color: lightgrey;
             border-radius: 8px;
-            padding: 12px; /* Padding lebih kecil */
-            margin-bottom: 16px; /* Increased to 1rem (16px) for clearer separation */
+            padding: 12px;
+            margin-bottom: 16px;
             color: white;
-            font-size: 13px; /* Font lebih kecil */
+            font-size: 13px;
         }
 
         .toolbar .feature-box h3 {
             margin: 0 0 8px;
-            font-size: 14px; /* Font lebih kecil untuk judul */
+            font-size: 14px;
             color: black;
         }
 
         .toolbar .feature-box button {
             width: 100%;
-            padding: 6px; /* Padding tombol lebih kecil */
+            padding: 6px;
             background-color: darkgrey;
             color: black;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 11px; /* Font lebih kecil */
-            margin-bottom: 4px; /* Added spacing between buttons within feature-box */
+            font-size: 11px;
+            margin-bottom: 4px;
             transition: background-color 0.3s;
         }
 
@@ -148,7 +148,7 @@
         }
 
         .toolbar .user-info img {
-            width: 40px; /* Gambar pengguna lebih kecil */
+            width: 40px;
             height: 40px;
             border-radius: 50%;
             margin-bottom: 8px;
@@ -157,34 +157,34 @@
         .toolbar .user-info span {
             display: block;
             margin: 4px 0;
-            font-size: 11px; /* Font lebih kecil */
+            font-size: 11px;
             color: black;
         }
 
         .overview, .history, .customers, .park-condition, .park-condition-2d {
             background-color: lightgrey;
-            padding: 10px; /* Reduced padding for compactness */
+            padding: 10px;
             border-radius: 8px;
-            border: 2px solid #dc3545; /* Border merah untuk konsistensi */
-            min-height: 150px; /* Ensure sections are compact but consistent */
+            border: 2px solid #dc3545;
+            min-height: 150px;
         }
 
         .park-condition-2d {
-            padding: 15px; /* Keep original padding for 2D section */
+            padding: 15px;
         }
 
         .overview h1 {
             margin: 0 0 10px;
             color: #007bff;
-            font-size: 16px; /* Smaller font size */
+            font-size: 16px;
         }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 columns for compactness */
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-bottom: 10px;
-            font-size: 12px; /* Smaller font size */
+            font-size: 12px;
         }
 
         .stats div {
@@ -210,11 +210,11 @@
         .history h2, .customers h2, .park-condition h2, .park-condition-2d h2 {
             margin-top: 0;
             color: #007bff;
-            font-size: 16px; /* Smaller font size */
+            font-size: 16px;
         }
 
         .history-list {
-            max-height: 100px; /* Reduced height for compactness */
+            max-height: 100px;
             overflow-y: auto;
             border: 1px solid #ccc;
             padding: 8px;
@@ -224,8 +224,8 @@
         .history-item, .customer-item {
             display: flex;
             justify-content: space-between;
-            padding: 6px 0; /* Reduced padding */
-            font-size: 10px; /* Smaller font size */
+            padding: 6px 0;
+            font-size: 10px;
             align-items: center;
         }
 
@@ -322,60 +322,95 @@
             animation: carExit 0.5s ease-in-out forwards;
         }
 
-        .login-container {
+        /* 3D Park Condition Styles */
+        #three-js-container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            display: none; /* Hidden by default */
+        }
+
+        #three-js-container canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        #status-panel {
+            position: absolute;
+            top: 40px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 8px;
+            max-width: 150px;
+            z-index: 100;
+            display: none; /* Hidden by default */
+        }
+
+        .status-title {
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #4CAF50;
+        }
+
+        .slot-status {
+            margin: 0.5px 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
-            padding-top: 80px; /* Menyesuaikan dengan header */
+            justify-content: space-between;
         }
 
-        .login-box {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-            text-align: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+        .occupied { color: #FF5722; }
+        .available { color: #4CAF50; }
 
-        .login-box h2 {
-            margin-top: 0;
-            color: #007bff;
-            font-size: 20px;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        .login-box button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
+        #toggle-status {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #4CAF50;
             color: white;
             border: none;
-            border-radius: 5px;
+            padding: 4px 8px;
+            border-radius: 2px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 8px;
+            z-index: 101;
         }
 
-        .login-box a {
-            display: block;
-            margin: 10px 0;
-            color: #007bff;
-            text-decoration: none;
-            font-size: 12px;
+        #toggle-status:hover {
+            background: #45a049;
         }
 
-        #toggleCameraBtn {
+        #controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            z-index: 100;
+        }
+
+        #controls button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            margin: 1px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 8px;
+        }
+
+        #controls button:hover {
+            background: #45a049;
+        }
+
+        #toggle-3d-btn {
             position: absolute;
             top: 10px;
             left: 10px;
@@ -385,21 +420,7 @@
             padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
-        }
-
-        #cameraStream {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            display: none; /* Initially hidden until expanded */
-        }
-
-        #cameraError {
-            display: block;
-            color: red;
-            font-size: 12px;
-            text-align: center;
-            margin-top: 10px;
+            z-index: 100;
         }
     </style>
 </head>
@@ -474,9 +495,7 @@
             </div>
             <div class="history">
                 <h2>Slot History</h2>
-                <div class="history-list" id="slotHistoryList">
-                    <!-- Slot history entries will be injected here -->
-                </div>
+                <div class="history-list" id="slotHistoryList"></div>
             </div>
             <div class="customers">
                 <h2>Customers Message</h2>
@@ -493,10 +512,19 @@
             </div>
             <div class="park-condition">
                 <h2>Park Condition (3D)</h2>
-                <div id="cameraContainer" style="width: 100%; max-width: 600px; position: relative;">
-                    <video id="cameraStream" autoplay style="width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"></video>
-                    <div id="cameraError">Kamera dimatikan. Klik tombol untuk mengaktifkan kamera.</div>
-                    <button id="toggleCameraBtn">Click to Expand</button>
+                <button id="toggle-3d-btn">Click to Expand</button>
+                <div id="three-js-container">
+                    <button id="toggle-status" onclick="toggleStatusPanel()">Show Parking Status</button>
+                    <div id="status-panel">
+                        <div class="status-title">🅿️ Parking Status</div>
+                        <div id="slot-list"></div>
+                    </div>
+                    <div id="controls">
+                        <div style="margin-bottom: 4px; font-weight: bold; font-size: 8px;">Camera Controls</div>
+                        <button onclick="resetCamera()">Reset View</button>
+                        <button onclick="topView()">Top View</button>
+                        <button onclick="sideView()">Side View</button>
+                    </div>
                 </div>
             </div>
             <div class="park-condition-2d">
@@ -530,6 +558,389 @@
             </div>
         </div>
     </main>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <!-- Firebase SDK for 3D Animation -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+        import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+
+        // Firebase SDK for 2D and other features
+        const firebaseConfig = {
+            apiKey: "AIzaSyAef3SJwvVVTunr6CWki79aenfpXlgYc0s",
+            authDomain: "digitaltwinparkingbrin.firebaseapp.com",
+            databaseURL: "https://digitaltwinparkingbrin-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "digitaltwinparkingbrin",
+            storageBucket: "digitaltwinparkingbrin.appspot.com",
+            messagingSenderId: "608462498913",
+            appId: "1:608462498913:web:73695d8c91f923e2db8e20",
+            measurementId: "G-F1TRY65RTG"
+        };
+
+        // Initialize Firebase for 3D animation
+        let database3D;
+        try {
+            const app = initializeApp(firebaseConfig);
+            database3D = getDatabase(app);
+            console.log("🔥 Firebase initialized successfully for 3D");
+        } catch (error) {
+            console.error("❌ Firebase initialization failed for 3D:", error);
+        }
+
+        // Global variables for 3D animation
+        let scene, camera, renderer;
+        let cars = [];
+        let allSlots = [];
+        let animationFrame;
+        let slotStatuses = {};
+        let statusPanel = document.getElementById('slot-list');
+        let isStatusPanelVisible = false;
+        let is3DExpanded = false;
+
+        // Setup Three.js Scene
+        function initScene() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            
+            camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // Aspect ratio will be updated
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(100, 100); // Initial size, will be updated
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.getElementById('three-js-container').appendChild(renderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(50, 50, 25);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+
+            const groundGeometry = new THREE.PlaneGeometry(200, 50);
+            const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+        }
+
+        // Create parking slots
+        function createParkingSlots() {
+            const slotMaterial = new THREE.MeshLambertMaterial({ color: 0x808080 });
+            const slotGeometry = new THREE.BoxGeometry(5, 0.2, 2.5);
+
+            for (let i = 0; i < 11; i++) {
+                const slot = new THREE.Mesh(slotGeometry, slotMaterial);
+                slot.position.set((10 - i) * 6 - 30, 0.1, 5);
+                slot.receiveShadow = true;
+                scene.add(slot);
+                allSlots.push({
+                    position: slot.position.clone(),
+                    slotNumber: i + 1
+                });
+            }
+
+            for (let i = 0; i < 9; i++) {
+                const slot = new THREE.Mesh(slotGeometry, slotMaterial);
+                slot.position.set((8 - i) * 6 - 24, 0.1, -5);
+                slot.receiveShadow = true;
+                scene.add(slot);
+                allSlots.push({
+                    position: slot.position.clone(),
+                    slotNumber: i + 12
+                });
+            }
+
+            createSlotLabels();
+        }
+
+        // Create slot number labels
+        function createSlotLabels() {
+            allSlots.forEach((slotData, index) => {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = 128;
+                canvas.height = 64;
+                
+                context.font = '40px Arial';
+                context.fillStyle = 'white';
+                context.textAlign = 'center';
+                context.fillText(slotData.slotNumber.toString(), 64, 45);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+                const sprite = new THREE.Sprite(spriteMaterial);
+                
+                sprite.position.set(slotData.position.x, 2, slotData.position.z);
+                sprite.scale.set(2, 1, 1);
+                scene.add(sprite);
+            });
+        }
+
+        // Create cars
+        function createCars() {
+            const carGeometry = new THREE.BoxGeometry(2.5, 1, 1.5);
+            const carColors = [
+                0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00, 0xFF00FF,
+                0x00FFFF, 0xFFA500, 0x800080, 0xFFC0CB, 0x8B4513,
+                0x2E8B57, 0x4B0082, 0xDC143C, 0x008B8B, 0x9932CC,
+                0xFF4500, 0x32CD32, 0x1E90FF, 0xFF69B4, 0x8FBC8F
+            ];
+
+            allSlots.forEach((slotData, index) => {
+                const carMaterial = new THREE.MeshLambertMaterial({ 
+                    color: carColors[index % carColors.length],
+                    transparent: true,
+                    opacity: 0
+                });
+                
+                const car = new THREE.Mesh(carGeometry, carMaterial);
+                car.position.set(slotData.position.x, 0.5, slotData.position.z);
+                car.castShadow = true;
+                scene.add(car);
+                
+                cars.push({
+                    mesh: car,
+                    material: carMaterial,
+                    slotIndex: slotData.slotNumber,
+                    targetOpacity: 0,
+                    currentOpacity: 0,
+                    animationSpeed: 0.05,
+                    isAnimating: false,
+                    bobOffset: Math.random() * Math.PI * 2,
+                    originalY: car.position.y
+                });
+            });
+        }
+
+        // Update status panel
+        function updateStatusPanel() {
+            let html = '';
+            let occupied = 0;
+            
+            const sortedSlotKeys = [];
+            for (let i = 1; i <= 20; i++) {
+                sortedSlotKeys.push(`slot_${i}`);
+            }
+            
+            sortedSlotKeys.forEach(slotKey => {
+                const slotNum = slotKey.replace('slot_', '');
+                const status = slotStatuses[slotKey] || false;
+                const statusClass = status ? 'occupied' : 'available';
+                const statusText = status ? 'OCCUPIED' : 'AVAILABLE';
+                
+                if (status) occupied++;
+                
+                html += `<div class="slot-status">
+                    <span>Slot ${slotNum}:</span>
+                    <span class="${statusClass}">${statusText}</span>
+                </div>`;
+            });
+            
+            const available = 20 - occupied;
+            html = `<div style="margin-bottom: 4px; font-weight: bold; font-size: 8px; border-bottom: 1px solid #ddd; padding-bottom: 3px;">
+                        📊 Status: ${occupied}/20 | ${available} available
+                    </div>` + html;
+            
+            statusPanel.innerHTML = html;
+        }
+
+        // Update live overview stats
+        function updateLiveOverview(occupiedCount, emptyCount, totalSlots) {
+            const occupiedElement = document.getElementById('occupiedSlots');
+            const emptyElement = document.getElementById('emptySlots');
+            
+            if (occupiedElement) {
+                occupiedElement.textContent = `${occupiedCount} / ${totalSlots}`;
+            }
+            
+            if (emptyElement) {
+                emptyElement.textContent = `${emptyCount} / ${totalSlots}`;
+            }
+            
+            console.log(`🔄 Stats updated: ${occupiedCount} occupied, ${emptyCount} empty`);
+        }
+
+        // Firebase listener for 3D animation
+        function setupFirebaseListener3D() {
+            if (!database3D) {
+                console.error("❌ Database not initialized for 3D!");
+                return;
+            }
+
+            console.log("🔗 Setting up Firebase listener for 3D with corrected slot mapping...");
+            console.log("📋 Slot Layout:");
+            console.log("   Baris Atas (Z=5): Slot 1-11 dari KANAN ke KIRI");
+            console.log("   Baris Bawah (Z=-5): Slot 12-20 dari KANAN ke KIRI");
+
+            const slotsRef = ref(database3D);
+            onValue(slotsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                    console.warn("❌ No data received from Firebase for 3D");
+                    return;
+                }
+
+                console.log("📊 Raw Firebase data received for 3D:", data);
+
+                let occupiedCount = 0;
+                const totalSlots = 20;
+                
+                console.log("🔍 Processing slots for 3D with corrected mapping...");
+
+                cars.forEach((car, carIndex) => {
+                    const slotNumber = car.slotIndex;
+                    const slotKey = `slot_${slotNumber}`;
+                    
+                    let newStatus = false;
+                    let firebaseValue = "undefined";
+                    
+                    if (data.hasOwnProperty(slotKey)) {
+                        firebaseValue = data[slotKey];
+                        newStatus = data[slotKey] === true;
+                        if (newStatus) occupiedCount++;
+                    }
+                    
+                    console.log(`🔍 Physical Slot ${slotNumber} (${slotKey}): Firebase=${firebaseValue}, Status=${newStatus}, CarIndex=${carIndex}`);
+                    
+                    slotStatuses[slotKey] = newStatus;
+                    
+                    car.targetOpacity = newStatus ? 1 : 0;
+                    car.isAnimating = true;
+                    
+                    console.log(`🚗 Physical Slot ${slotNumber}: ${newStatus ? 'OCCUPIED' : 'AVAILABLE'} - Setting target opacity to ${car.targetOpacity}`);
+                });
+                
+                const emptyCount = totalSlots - occupiedCount;
+                console.log(`📈 Final count for 3D: ${occupiedCount} occupied, ${emptyCount} available out of ${totalSlots} total`);
+                
+                updateStatusPanel();
+                updateLiveOverview(occupiedCount, emptyCount, totalSlots);
+            }, (error) => {
+                console.error("❌ Firebase read error for 3D:", error);
+            });
+        }
+
+        // Animation loop
+        function animate() {
+            animationFrame = requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.001;
+            let animatingCars = 0;
+            let visibleCars = 0;
+
+            cars.forEach((car, index) => {
+                if (car.isAnimating) {
+                    animatingCars++;
+                    const diff = car.targetOpacity - car.currentOpacity;
+                    
+                    if (Math.abs(diff) < 0.01) {
+                        car.currentOpacity = car.targetOpacity;
+                        car.isAnimating = false;
+                        console.log(`✅ Animation complete for Slot ${index + 1}: opacity=${car.currentOpacity}`);
+                    } else {
+                        car.currentOpacity += diff * car.animationSpeed;
+                    }
+                    
+                    car.material.opacity = car.currentOpacity;
+                }
+                
+                if (car.currentOpacity > 0.1) {
+                    visibleCars++;
+                    const bobAmount = 0.05;
+                    car.mesh.position.y = car.originalY + Math.sin(time * 2 + car.bobOffset) * bobAmount;
+                }
+            });
+
+            if (Math.floor(time) % 5 === 0 && Math.floor(time * 10) % 10 === 0) {
+                console.log(`🎬 Animation Status: ${animatingCars} animating, ${visibleCars} visible cars`);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Camera control functions
+        window.resetCamera = function() {
+            camera.position.set(0, 20, 40);
+            camera.lookAt(0, 0, 0);
+        }
+
+        window.topView = function() {
+            camera.position.set(0, 50, 0);
+            camera.lookAt(0, 0, 0);
+        }
+
+        window.sideView = function() {
+            camera.position.set(60, 15, 0);
+            camera.lookAt(0, 0, 0);
+        }
+
+        // Toggle status panel visibility
+        window.toggleStatusPanel = function() {
+            const statusPanel = document.getElementById('status-panel');
+            const toggleButton = document.getElementById('toggle-status');
+            
+            isStatusPanelVisible = !isStatusPanelVisible;
+            statusPanel.style.display = isStatusPanelVisible ? 'block' : 'none';
+            toggleButton.textContent = isStatusPanelVisible ? 'Hide Parking Status' : 'Show Parking Status';
+            console.log(`🔄 Status panel ${isStatusPanelVisible ? 'shown' : 'hidden'}`);
+        }
+
+        // Initialize 3D scene
+        function init3D() {
+            try {
+                console.log("🚀 Initializing 3D Parking Lot...");
+                
+                initScene();
+                console.log("✅ Scene initialized");
+                
+                createParkingSlots();
+                console.log("✅ Parking slots created");
+                
+                createCars();
+                console.log("✅ Cars created");
+                
+                setupFirebaseListener3D();
+                console.log("✅ Firebase listener setup for 3D");
+                
+                resetCamera();
+                console.log("✅ Camera positioned");
+                
+                animate();
+                console.log("✅ Animation started");
+                
+                if (database3D) {
+                    console.log("✅ Firebase database ready for 3D");
+                    console.log("🔗 Database URL:", database3D.app.options.databaseURL);
+                } else {
+                    console.error("❌ Firebase database not ready for 3D");
+                }
+                
+                console.log("🎮 Parking lot simulation initialized successfully");
+                console.log("📊 Expected Firebase data format: {slot_1: true/false, slot_2: true/false, ...}");
+                
+            } catch (error) {
+                console.error("❌ Initialization error for 3D:", error);
+            }
+        }
+
+        // Handle window resize for 3D
+        function updateRendererSize() {
+            const container = document.getElementById('three-js-container');
+            if (is3DExpanded && container) {
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            }
+        }
+
+        window.addEventListener('resize', updateRendererSize);
+    </script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script>
@@ -636,11 +1047,10 @@
             updateClock();
             setInterval(updateClock, 1000);
 
-            // Firebase slot update logic
+            // Firebase slot update logic for 2D
             dbRef.on("value", (snapshot) => {
                 const data = snapshot.val();
                 if (!data) {
-                    // If no data, assume all slots are empty
                     document.getElementById('occupiedSlots').textContent = '0 / 20';
                     document.getElementById('emptySlots').textContent = '20 / 20';
                     return;
@@ -649,7 +1059,6 @@
                 let occupiedCount = 0;
                 const totalSlots = 20;
 
-                // Update slot visuals and count occupied slots
                 for (let i = 1; i <= totalSlots; i++) {
                     const slotKey = `slot_${i}`;
                     const slotEl = document.querySelector(`.slot[data-slot="${i}"]`);
@@ -665,13 +1074,12 @@
                     }
                 }
 
-                // Update Live Overview
                 const emptyCount = totalSlots - occupiedCount;
                 document.getElementById('occupiedSlots').textContent = `${occupiedCount} / ${totalSlots}`;
                 document.getElementById('emptySlots').textContent = `${emptyCount} / ${totalSlots}`;
             });
 
-            // Slot click handler
+            // Slot click handler for 2D
             const slots = document.querySelectorAll('.slot');
             slots.forEach(slot => {
                 slot.addEventListener('click', () => {
@@ -716,62 +1124,27 @@
                     });
             });
 
-            // Camera toggle and webcam initialization
-            const toggleCameraBtn = document.getElementById('toggleCameraBtn');
-            const cameraContainer = document.getElementById('cameraContainer');
-            const cameraStream = document.getElementById('cameraStream');
-            const cameraError = document.getElementById('cameraError');
-            let isExpanded = false;
-            let stream = null;
+            // Toggle 3D animation
+            const toggle3DBtn = document.getElementById('toggle-3d-btn');
+            const threeJSContainer = document.getElementById('three-js-container');
 
-            // Initialize webcam
-            async function startWebcam() {
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: 'environment' }, // Prefer rear camera if available
-                        audio: false
-                    });
-                    cameraStream.srcObject = stream;
-                    cameraStream.play();
-                    cameraStream.style.display = 'block';
-                    cameraError.style.display = 'none';
-                } catch (error) {
-                    console.error('Error accessing webcam:', error);
-                    cameraStream.style.display = 'none';
-                    cameraError.textContent = 'Kamera tidak tersedia. Pastikan perangkat Anda memiliki kamera dan izinkan akses.';
-                    cameraError.style.display = 'block';
+            toggle3DBtn.addEventListener('click', () => {
+                is3DExpanded = !is3DExpanded;
+                threeJSContainer.style.display = is3DExpanded ? 'block' : 'none';
+                toggle3DBtn.textContent = is3DExpanded ? 'Click to Collapse' : 'Click to Expand';
+
+                if (is3DExpanded && !scene) {
+                    init3D();
+                    updateRendererSize();
                 }
-            }
-
-            // Stop webcam
-            function stopWebcam() {
-                if (stream) {
-                    const tracks = stream.getTracks();
-                    tracks.forEach(track => track.stop());
-                    stream = null;
-                }
-                cameraStream.srcObject = null;
-                cameraStream.style.display = 'none';
-                cameraError.textContent = 'Kamera dimatikan. Klik tombol untuk mengaktifkan kamera.';
-                cameraError.style.display = 'block';
-            }
-
-            // Toggle camera size and webcam state
-            toggleCameraBtn.addEventListener('click', () => {
-                isExpanded = !isExpanded;
-                cameraContainer.style.maxWidth = isExpanded ? '100%' : '600px';
-                toggleCameraBtn.textContent = isExpanded ? 'Click to Collapse' : 'Click to Expand';
-
-                if (isExpanded) {
-                    startWebcam();
+                if (is3DExpanded) {
+                    updateRendererSize();
                 } else {
-                    stopWebcam();
+                    if (animationFrame) {
+                        cancelAnimationFrame(animationFrame);
+                        animationFrame = null;
+                    }
                 }
-            });
-
-            // Stop webcam stream when page is unloaded
-            window.addEventListener('unload', () => {
-                stopWebcam();
             });
 
             // Prevent undo/redo navigation
