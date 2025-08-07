@@ -13,42 +13,30 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAef3SJwvVVTunr6CWki79aenfpXlgYc0s",
-  authDomain: "digitaltwinparkingbrin.firebaseapp.com",
-  databaseURL: "https://digitaltwinparkingbrin-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "digitaltwinparkingbrin",
-  storageBucket: "digitaltwinparkingbrin.firebasestorage.app",
-  messagingSenderId: "608462498913",
-  appId: "1:608462498913:web:73695d8c91f923e2db8e20",
-  measurementId: "G-F1TRY65RTG"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyAef3SJwvVVTunr6CWki79aenfpXlgYc0s",
+      authDomain: "digitaltwinparkingbrin.firebaseapp.com",
+      databaseURL: "https://digitaltwinparkingbrin-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "digitaltwinparkingbrin",
+      storageBucket: "digitaltwinparkingbrin.firebasestorage.app",
+      messagingSenderId: "608462498913",
+      appId: "1:608462498913:web:73695d8c91f923e2db8e20",
+      measurementId: "G-F1TRY65RTG"
+    };
 
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
   </script>
-
-  <style>
-    .status.in {
-      color: red;
-      font-weight: bold;
-    }
-
-    .status.out {
-      color: green;
-      font-weight: bold;
-    }
-  </style>
 </head>
 <body>
   <video id="bg-video" autoplay muted loop>
-    <source src="../assets/wave.mp4" type="video/mp4">
+    <source src="https://github.com/Defdava/Digital-Twin-Website-used/blob/main/wave.mp4?raw=true" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
   <header>
     <div class="logo" id="toggleToolbar">
-      <img src="../assets/Logo_BRIN.png" alt="BRIN Logo">
+      <img src="https://github.com/Defdava/Digital-Twin-Website-used/blob/main/Logo_BRIN.png?raw=true" alt="BRIN Logo">
       <span>BRIN</span>
       <span>Badan Riset Nasional</span>
     </div>
@@ -95,8 +83,45 @@ const firebaseConfig = {
 
   <script src="../JS/app.js"></script>
   <script>
+    // Authentication System
+    class User {
+      constructor(username, email, password, idWorker) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.idWorker = idWorker;
+      }
+    }
+
+    class AuthSystem {
+      constructor() {
+        this.users = JSON.parse(localStorage.getItem('users')) || [];
+      }
+
+      register(username, email, password, idWorker) {
+        const userExists = this.users.some(user => user.email === email);
+        if (userExists) {
+          throw new Error('User already exists!');
+        }
+        const user = new User(username, email, password, idWorker);
+        this.users.push(user);
+        localStorage.setItem('users', JSON.stringify(this.users));
+        return user;
+      }
+
+      login(email, password) {
+        const user = this.users.find(u => u.email === email && u.password === password);
+        if (user) {
+          return user;
+        }
+        throw new Error('Invalid email or password!');
+      }
+    }
+
+    const auth = new AuthSystem();
+
     document.addEventListener('DOMContentLoaded', () => {
-      // Cek user session
+      // Check user session
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       const userInfo = document.getElementById('userInfo');
       const userName = document.getElementById('userName');
@@ -147,7 +172,7 @@ const firebaseConfig = {
       const slotStatusList = document.getElementById("slotStatusList");
 
       function updateSlotStatus(data) {
-        slotStatusList.innerHTML = ''; // Bersihkan dulu
+        slotStatusList.innerHTML = ''; // Clear previous content
         for (const slot in data) {
           const status = data[slot] ? 'Terisi' : 'Kosong';
           const statusClass = data[slot] ? 'status in' : 'status out';
