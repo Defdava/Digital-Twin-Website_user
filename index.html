@@ -483,6 +483,34 @@
         #controls button:hover {
             background: #45a049;
         }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 102;
+            display: none;
+        }
+
+        #error-message {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            z-index: 102;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -588,6 +616,8 @@
                         <button onclick="topView()">Top View</button>
                         <button onclick="sideView()">Side View</button>
                     </div>
+                    <div id="loading">Loading parking data...</div>
+                    <div id="error-message"></div>
                 </div>
             </div>
             <div class="park-condition-2d">
@@ -684,6 +714,17 @@
         let statusPanel = document.getElementById('slot-list');
         let isStatusPanelVisible = false;
         let isThreeInitialized = false;
+        const loadingElement = document.getElementById('loading');
+        const errorElement = document.getElementById('error-message');
+
+        // Show Error Message
+        function showError(message) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
 
         // Initialize Three.js Scene
         function initScene() {
@@ -772,7 +813,7 @@
             });
         }
 
-        // Create Cars
+        // Create Cars with Animation
         function createCars() {
             console.log("Creating cars...");
             const carGeometry = new THREE.BoxGeometry(2.5, 1, 1.5);
@@ -793,7 +834,7 @@
                 const car = new THREE.Mesh(carGeometry, carMaterial);
                 car.position.set(slotData.position.x, 0.5, slotData.position.z);
                 car.castShadow = true;
-                car.scale.set(0, 0, 0); // Initial scale for animation
+                car.scale.set(0, 0, 0);
                 scene.add(car);
                 
                 cars.push({
@@ -811,7 +852,7 @@
                 });
             });
 
-            // Initialize car visibility based on current slotStatuses
+            // Initialize car visibility based on slotStatuses
             for (let i = 1; i <= 20; i++) {
                 const slotKey = `slot_${i}`;
                 if (slotStatuses[slotKey]) {
@@ -859,61 +900,80 @@
             statusPanel.innerHTML = html;
         }
 
+        // Update Live Overview Stats
+        function updateLiveOverview(occupiedCount, emptyCount, totalSlots) {
+            const occupiedElement = document.getElementById('occupiedSlots');
+            const emptyElement = document.getElementById('emptySlots');
+            
+            if (occupiedElement) {
+                occupiedElement.textContent = `${occupiedCount} / ${totalSlots}`;
+            }
+            
+            if (emptyElement) {
+                emptyElement.textContent = `${emptyCount} / ${totalSlots}`;
+            }
+            
+            console.log(`🔄 Stats updated: ${occupiedCount} occupied, ${emptyCount} empty`);
+        }
+
         // Animation Loop
         function animate() {
             animationFrame = requestAnimationFrame(animate);
             
             const time = Date.now() * 0.001;
+            let animatingCars = 0;
+            let visibleCars = 0;
+
             cars.forEach((car, index) => {
                 if (car.isAnimating) {
-                    // Animate opacity
+                    animatingCars++;
                     const opacityDiff = car.targetOpacity - car.currentOpacity;
-                    if (Math.abs(opacityDiff) > 0.01) {
-                        car.currentOpacity += opacityDiff * car.animationSpeed;
-                        car.material.opacity = car.currentOpacity;
-                    } else {
-                        car.currentOpacity = car.targetOpacity;
-                    }
-                    
-                    // Animate scale
                     const scaleDiff = car.targetScale - car.currentScale;
-                    if (Math.abs(scaleDiff) > 0.01) {
-                        car.currentScale += scaleDiff * car.animationSpeed;
-                        car.mesh.scale.set(car.currentScale, car.currentScale, car.currentScale);
-                    } else {
-                        car.currentScale = car.targetScale;
-                    }
                     
-                    // Stop animation when both are close enough
                     if (Math.abs(opacityDiff) < 0.01 && Math.abs(scaleDiff) < 0.01) {
+                        car.currentOpacity = car.targetOpacity;
+                        car.currentScale = car.targetScale;
                         car.isAnimating = false;
+                        console.log(`✅ Animation complete for Slot ${index + 1}: opacity=${car.currentOpacity}, scale=${car.currentScale}`);
+                    } else {
+                        car.currentOpacity += opacityDiff * car.animationSpeed;
+                        car.currentScale += scaleDiff * car.animationSpeed;
+                        car.material.opacity = car.currentOpacity;
+                        car.mesh.scale.set(car.currentScale, car.currentScale, car.currentScale);
                     }
                 }
                 
-                // Bobbing effect for visible cars
                 if (car.currentOpacity > 0.1) {
+                    visibleCars++;
                     const bobAmount = 0.05;
                     car.mesh.position.y = car.originalY + Math.sin(time * 2 + car.bobOffset) * bobAmount;
                 }
             });
 
+            if (Math.floor(time) % 5 === 0 && Math.floor(time * 10) % 10 === 0) {
+                console.log(`🎬 Animation Status: ${animatingCars} animating, ${visibleCars} visible cars`);
+            }
+
             renderer.render(scene, camera);
         }
 
-        // Camera Controls
+        // Camera Controls (from provided code)
         window.resetCamera = function() {
             camera.position.set(0, 20, 40);
             camera.lookAt(0, 0, 0);
+            console.log("🔄 Camera reset to default view");
         }
 
         window.topView = function() {
             camera.position.set(0, 50, 0);
             camera.lookAt(0, 0, 0);
+            console.log("🔄 Camera set to top view");
         }
 
         window.sideView = function() {
             camera.position.set(60, 15, 0);
             camera.lookAt(0, 0, 0);
+            console.log("🔄 Camera set to side view");
         }
 
         // Toggle Status Panel
@@ -921,6 +981,7 @@
             isStatusPanelVisible = !isStatusPanelVisible;
             statusPanel.style.display = isStatusPanelVisible ? 'block' : 'none';
             document.getElementById('toggle-status').textContent = isStatusPanelVisible ? 'Hide Parking Status' : 'Show Parking Status';
+            console.log(`🔄 Status panel ${isStatusPanelVisible ? 'shown' : 'hidden'}`);
         }
 
         // Initialize 3D Visualization
@@ -934,11 +995,13 @@
                 createCars();
                 resetCamera();
                 animate();
+                setupFirebaseListener();
                 isThreeInitialized = true;
                 document.getElementById('threeError').style.display = 'none';
             } catch (error) {
                 console.error("❌ Three.js initialization error:", error);
                 document.getElementById('threeError').style.display = 'block';
+                showError("3D visualization failed to load.");
             }
         }
 
@@ -958,6 +1021,87 @@
             cars = [];
             allSlots = [];
             isThreeInitialized = false;
+        }
+
+        // Firebase Listener for slot_parking
+        function setupFirebaseListener() {
+            if (!dbRef) {
+                console.error("❌ Database not initialized!");
+                showError("Database not initialized. Please refresh the page.");
+                return;
+            }
+
+            console.log("🔗 Setting up Firebase listener for slot_parking...");
+            console.log("📋 Slot Layout:");
+            console.log("   Baris Atas (Z=5): Slot 1-11 dari KANAN ke KIRI");
+            console.log("   Baris Bawah (Z=-5): Slot 12-20 dari KANAN ke KIRI");
+
+            loadingElement.style.display = 'block';
+            dbRef.on("value", (snapshot) => {
+                loadingElement.style.display = 'none';
+                const data = snapshot.val();
+                if (!data) {
+                    console.warn("❌ No data received from Firebase");
+                    showError("No parking data available. Please check Firebase.");
+                    for (let i = 1; i <= 20; i++) {
+                        slotStatuses[`slot_${i}`] = false;
+                        const slotEl = document.querySelector(`.slot[data-slot="${i}"]`);
+                        if (slotEl) {
+                            slotEl.classList.remove("occupied");
+                            slotEl.querySelector(".car").style.display = "none";
+                        }
+                        if (cars[i-1]) {
+                            cars[i-1].targetOpacity = 0;
+                            cars[i-1].targetScale = 0;
+                            cars[i-1].isAnimating = true;
+                        }
+                    }
+                    updateStatusPanel();
+                    updateLiveOverview(0, 20, 20);
+                    return;
+                }
+
+                console.log("📊 Raw Firebase data received:", data);
+
+                let occupiedCount = 0;
+                const totalSlots = 20;
+
+                for (let i = 1; i <= totalSlots; i++) {
+                    const slotKey = `slot_${i}`;
+                    slotStatuses[slotKey] = false; // Initialize
+                    const slotEl = document.querySelector(`.slot[data-slot="${i}"]`);
+                    let newStatus = data[slotKey] === true;
+                    slotStatuses[slotKey] = newStatus;
+
+                    if (slotEl) {
+                        if (newStatus) {
+                            slotEl.classList.add("occupied");
+                            slotEl.querySelector(".car").style.display = "block";
+                            occupiedCount++;
+                        } else {
+                            slotEl.classList.remove("occupied");
+                            slotEl.querySelector(".car").style.display = "none";
+                        }
+                    }
+
+                    if (cars[i-1]) {
+                        cars[i-1].targetOpacity = newStatus ? 1 : 0;
+                        cars[i-1].targetScale = newStatus ? 1 : 0;
+                        cars[i-1].isAnimating = true;
+                        console.log(`🚗 Slot ${i}: ${newStatus ? 'OCCUPIED' : 'AVAILABLE'} - Setting target opacity=${cars[i-1].targetOpacity}, scale=${cars[i-1].targetScale}`);
+                    }
+                }
+
+                const emptyCount = totalSlots - occupiedCount;
+                console.log(`📈 Final count: ${occupiedCount} occupied, ${emptyCount} available out of ${totalSlots} total`);
+                
+                updateStatusPanel();
+                updateLiveOverview(occupiedCount, emptyCount, totalSlots);
+            }, (error) => {
+                loadingElement.style.display = 'none';
+                console.error("❌ Firebase read error:", error);
+                showError("Failed to fetch parking data. Please try again.");
+            });
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -1010,72 +1154,6 @@
             updateClock();
             setInterval(updateClock, 1000);
 
-            // Firebase Slot Update
-            dbRef.on("value", (snapshot) => {
-                console.log("Firebase slot_parking data:", snapshot.val());
-                const data = snapshot.val();
-                let occupiedCount = 0;
-                const totalSlots = 20;
-
-                // Initialize slotStatuses if not already set
-                for (let i = 1; i <= totalSlots; i++) {
-                    slotStatuses[`slot_${i}`] = false;
-                }
-
-                if (!data) {
-                    document.getElementById('occupiedSlots').textContent = '0 / 20';
-                    document.getElementById('emptySlots').textContent = '20 / 20';
-                    for (let i = 1; i <= totalSlots; i++) {
-                        const slotEl = document.querySelector(`.slot[data-slot="${i}"]`);
-                        if (slotEl) {
-                            slotEl.classList.remove("occupied");
-                            slotEl.querySelector(".car").style.display = "none";
-                        }
-                        slotStatuses[`slot_${i}`] = false;
-                        if (cars[i-1]) {
-                            cars[i-1].targetOpacity = 0;
-                            cars[i-1].targetScale = 0;
-                            cars[i-1].isAnimating = true;
-                        }
-                    }
-                    updateStatusPanel();
-                    return;
-                }
-
-                for (let i = 1; i <= totalSlots; i++) {
-                    const slotKey = `slot_${i}`;
-                    const slotEl = document.querySelector(`.slot[data-slot="${i}"]`);
-                    let newStatus = data[slotKey] === true;
-                    slotStatuses[slotKey] = newStatus;
-
-                    if (slotEl) {
-                        if (newStatus) {
-                            slotEl.classList.add("occupied");
-                            slotEl.querySelector(".car").style.display = "block";
-                            occupiedCount++;
-                        } else {
-                            slotEl.classList.remove("occupied");
-                            slotEl.querySelector(".car").style.display = "none";
-                        }
-                    }
-
-                    if (cars[i-1]) {
-                        cars[i-1].targetOpacity = newStatus ? 1 : 0;
-                        cars[i-1].targetScale = newStatus ? 1 : 0;
-                        cars[i-1].isAnimating = true;
-                    }
-                }
-
-                const emptyCount = totalSlots - occupiedCount;
-                document.getElementById('occupiedSlots').textContent = `${occupiedCount} / ${totalSlots}`;
-                document.getElementById('emptySlots').textContent = `${emptyCount} / ${totalSlots}`;
-                updateStatusPanel();
-            }, (error) => {
-                console.error("Firebase slot_parking error:", error);
-                document.getElementById('threeError').textContent = "Failed to fetch parking data.";
-                document.getElementById('threeError').style.display = 'block';
-            });
-
             // Slot History Update
             slotHistoryRef.on("value", (snapshot) => {
                 console.log("Firebase slot_history data:", snapshot.val());
@@ -1108,7 +1186,6 @@
 
             // 3D Visualization Toggle
             const toggleCameraBtn = document.getElementById('toggleCameraBtn');
-            const cameraContainer = document.getElementById('cameraContainer');
             const threeContainer = document.getElementById('threeContainer');
             let isExpanded = false;
 
