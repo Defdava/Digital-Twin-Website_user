@@ -419,6 +419,7 @@
             padding: 8px;
             border-radius: 4px;
             z-index: 100;
+            display: none; /* Initially hidden */
         }
 
         #controls button {
@@ -910,6 +911,7 @@
                 animate();
                 setupFirebaseListener();
                 document.getElementById('threeError').style.display = 'none';
+                document.getElementById('controls').style.display = 'block';
             } catch (error) {
                 console.error("❌ Three.js initialization error:", error);
                 document.getElementById('threeError').style.display = 'block';
@@ -928,6 +930,7 @@
                 renderer.dispose();
             }
             renderer = null;
+            document.getElementById('controls').style.display = 'none';
         }
 
         // Firebase Listener for slot_parking
@@ -1103,6 +1106,7 @@
                 if (isExpanded) {
                     console.log("Expanding 3D view");
                     threeContainer.style.display = 'block';
+                    document.getElementById('controls').style.display = 'block';
                     if (!scene) {
                         initThree();
                     } else {
