@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>BRIN Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: darkslategrey;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: none;
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        video#bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.4;
+        }
+
+        header {
+            background-image: linear-gradient(to right, lightseagreen, palevioletred);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo img {
+            height: 40px;
+            vertical-align: middle;
+        }
+
+        .logo span {
+            margin-left: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-right span {
+            margin-right: 20px;
+            font-size: 14px;
+        }
+
+        .toolbar {
+            position: fixed;
+            top: 60px;
+            left: -400px;
+            width: 200px;
+            height: 100%;
+            background-image: linear-gradient(to bottom, lightseagreen, palevioletred);
+            padding: 15px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease-in-out;
+            z-index: 999;
+            overflow-y: auto;
+        }
+
+        .toolbar.active {
+            left: 0;
+        }
+
+        .toolbar .feature-box {
+            background-color: lightgrey;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            color: white;
+            font-size: 13px;
+        }
+
+        .toolbar .feature-box h3 {
+            margin: 0 0 8px;
+            font-size: 14px;
+            color: black;
+        }
+
+        .toolbar .feature-box button {
+            width: 100%;
+            padding: 6px;
+            background-color: darkgrey;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-bottom: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .toolbar .feature-box button:hover {
+            background-color: darkslategrey;
+        }
+
+        .toolbar .user-info {
+            text-align: center;
+        }
+
+        .toolbar .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-bottom: 8px;
+        }
+
+        .toolbar .user-info span {
+            display: block;
+            margin: 4px 0;
+            font-size: 11px;
+            color: black;
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 80px 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-container h2 {
+            margin-top: 0;
+            color: #007bff;
+            font-size: 20px;
+        }
+
+        .profile-container img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            object-fit: cover;
+        }
+
+        .profile-container input[type="text"],
+        .profile-container input[type="password"],
+        .profile-container input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .profile-container input[type="file"] {
+            padding: 3px;
+        }
+
+        .profile-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .profile-container button:hover {
+            background-color: #0056b3;
+        }
+
+        #error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        #success-message {
+            color: green;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <video id="bg-video" autoplay muted loop>
+        <source src="https://github.com/Defdava/Digital-Twin-Website-used/blob/main/wave.mp4?raw=true" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <header>
+        <div class="logo" id="toggleToolbar">
+            <img src="https://github.com/Defdava/Digital-Twin-Website-used/blob/main/Logo_BRIN.png?raw=true" alt="BRIN Logo">
+            <span>BRIN</span>
+            <span>Badan Riset Nasional</span>
+        </div>
+        <div class="header-right">
+            <span>Parking Management System</span>
+        </div>
+    </header>
+    <aside class="toolbar" id="toolbar">
+        <div class="feature-box">
+            <h3>Parking Management System</h3>
+        </div>
+        <div class="feature-box">
+            <button class="live-overview" onclick="window.location.href='/index.html'">Live Overview</button>
+            <button class="prev-analysis" onclick="window.location.href='/previous-analysis.html'">Previous Analysis</button>
+        </div>
+        <div class="feature-box user-info" id="userInfo">
+            <h3>User</h3>
+            <img id="profilePic" src="/assets/user.JPG" alt="User">
+            <span>Welcome Back</span>
+            <span id="userName"></span>
+            <button class="logout">Log Out</button>
+        </div>
+        <div class="feature-box">
+            <button class="export-data">Export Data</button>
+            <button class="3d-viewer-vr">3D Viewer VR</button>
+            <button class="helpdesk">Helpdesk</button>
+            <button class="profile" onclick="window.location.href='/profile.html'">Profile</button>
+            <button class="parking-analysis">Parking Analysis</button>
+        </div>
+    </aside>
+    <main class="main-content">
+        <div class="profile-container">
+            <h2>Profile Settings</h2>
+            <img id="previewPic" src="/assets/user.JPG" alt="Profile Picture">
+            <input type="file" id="profilePicture" accept="image/*">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="New Password">
+            <input type="password" id="confirmPassword" placeholder="Confirm New Password">
+            <button id="saveProfile">Save Changes</button>
+            <div id="error-message"></div>
+            <div id="success-message"></div>
+        </div>
+    </main>
+    <script>
+        // Authentication System
+        class User {
+            constructor(username, email, password, idWorker, profilePic = '/assets/user.JPG') {
+                this.username = username;
+                this.email = email;
+                this.password = password;
+                this.idWorker = idWorker;
+                this.profilePic = profilePic;
+            }
+        }
+
+        class AuthSystem {
+            constructor() {
+                this.users = JSON.parse(localStorage.getItem('users')) || [];
+            }
+
+            updateUser(email, updatedData) {
+                const userIndex = this.users.findIndex(user => user.email === email);
+                if (userIndex !== -1) {
+                    this.users[userIndex] = { ...this.users[userIndex], ...updatedData };
+                    localStorage.setItem('users', JSON.stringify(this.users));
+                    return this.users[userIndex];
+                }
+                throw new Error('User not found!');
+            }
+        }
+
+        const auth = new AuthSystem();
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Authentication Check
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('userName');
+            const profilePic = document.getElementById('profilePic');
+            const previewPic = document.getElementById('previewPic');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const profilePictureInput = document.getElementById('profilePicture');
+            const saveProfileBtn = document.getElementById('saveProfile');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+
+            if (!currentUser) {
+                alert('Silakan login terlebih dahulu!');
+                window.location.replace('/login.html');
+                return;
+            } else {
+                userName.textContent = currentUser.username;
+                profilePic.src = currentUser.profilePic || '/assets/user.JPG';
+                previewPic.src = currentUser.profilePic || '/assets/user.JPG';
+                usernameInput.value = currentUser.username;
+            }
+
+            // Toggle Toolbar
+            const toggleToolbar = document.getElementById('toggleToolbar');
+            const toolbar = document.getElementById('toolbar');
+            toggleToolbar.addEventListener('click', () => {
+                toolbar.classList.toggle('active');
+            });
+
+            // Logout
+            document.querySelector('.logout').addEventListener('click', () => {
+                localStorage.removeItem('currentUser');
+                alert('Berhasil logout!');
+                window.location.replace('/login.html');
+            });
+
+            // Profile Picture Preview
+            profilePictureInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        previewPic.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Save Profile Changes
+            saveProfileBtn.addEventListener('click', () => {
+                const newUsername = usernameInput.value.trim();
+                const newPassword = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                const file = profilePictureInput.files[0];
+
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+
+                if (!newUsername) {
+                    errorMessage.textContent = 'Username cannot be empty!';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                if (newPassword && newPassword !== confirmPassword) {
+                    errorMessage.textContent = 'Passwords do not match!';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                try {
+                    let updatedData = { username: newUsername };
+                    if (newPassword) {
+                        updatedData.password = newPassword;
+                    }
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            updatedData.profilePic = e.target.result;
+                            const updatedUser = auth.updateUser(currentUser.email, updatedData);
+                            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                            userName.textContent = updatedUser.username;
+                            profilePic.src = updatedUser.profilePic;
+                            previewPic.src = updatedUser.profilePic;
+                            successMessage.textContent = 'Profile updated successfully!';
+                            successMessage.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        const updatedUser = auth.updateUser(currentUser.email, updatedData);
+                        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                        userName.textContent = updatedUser.username;
+                        profilePic.src = updatedUser.profilePic || '/assets/user.JPG';
+                        previewPic.src = updatedUser.profilePic || '/assets/user.JPG';
+                        successMessage.textContent = 'Profile updated successfully!';
+                        successMessage.style.display = 'block';
+                    }
+                } catch (error) {
+                    errorMessage.textContent = error.message;
+                    errorMessage.style.display = 'block';
+                }
+            });
+
+            // Prevent Undo/Redo and Navigation
+            document.addEventListener('keydown', (event) => {
+                if ((event.ctrlKey || event.metaKey) && (event.key === 'z' || event.key === 'y' || event.key === 'Z' || event.key === 'Y')) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    console.log('Undo/Redo is disabled');
+                }
+            });
+
+            window.addEventListener('popstate', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                if (!localStorage.getItem('currentUser')) {
+                    window.location.replace('/login.html');
+                } else {
+                    history.replaceState(null, null, window.location.href);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

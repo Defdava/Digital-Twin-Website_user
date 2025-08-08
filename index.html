@@ -419,7 +419,7 @@
             padding: 8px;
             border-radius: 4px;
             z-index: 100;
-            display: none; /* Initially hidden */
+            display: none;
         }
 
         #controls button {
@@ -491,7 +491,7 @@
         </div>
         <div class="feature-box user-info" id="userInfo">
             <h3>User</h3>
-            <img src="/assets/user.JPG" alt="User">
+            <img id="profilePic" src="/assets/user.JPG" alt="User">
             <span>Welcome Back</span>
             <span id="userName"></span>
             <button class="logout">Log Out</button>
@@ -500,7 +500,7 @@
             <button class="export-data">Export Data</button>
             <button class="3d-viewer-vr">3D Viewer VR</button>
             <button class="helpdesk">Helpdesk</button>
-            <button class="profile">Profile</button>
+            <button class="profile" onclick="window.location.href='/profile.html'">Profile</button>
             <button class="parking-analysis">Parking Analysis</button>
         </div>
     </aside>
@@ -605,11 +605,12 @@
     <script>
         // Authentication System
         class User {
-            constructor(username, email, password, idWorker) {
+            constructor(username, email, password, idWorker, profilePic = '/assets/user.JPG') {
                 this.username = username;
                 this.email = email;
                 this.password = password;
                 this.idWorker = idWorker;
+                this.profilePic = profilePic;
             }
         }
 
@@ -618,12 +619,12 @@
                 this.users = JSON.parse(localStorage.getItem('users')) || [];
             }
 
-            register(username, email, password, idWorker) {
+            register(username, email, password, idWorker, profilePic) {
                 const userExists = this.users.some(user => user.email === email);
                 if (userExists) {
                     throw new Error('User already exists!');
                 }
-                const user = new User(username, email, password, idWorker);
+                const user = new User(username, email, password, idWorker, profilePic);
                 this.users.push(user);
                 localStorage.setItem('users', JSON.stringify(this.users));
                 return user;
@@ -1019,12 +1020,14 @@
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             const userInfo = document.getElementById('userInfo');
             const userName = document.getElementById('userName');
+            const profilePic = document.getElementById('profilePic');
             if (!currentUser) {
                 alert('Silakan login terlebih dahulu!');
                 window.location.replace('/login.html');
                 return;
             } else {
                 userName.textContent = currentUser.username;
+                profilePic.src = currentUser.profilePic || '/assets/user.JPG';
             }
 
             // Logout
