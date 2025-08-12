@@ -70,9 +70,8 @@
             <img id="profilePic" src="/assets/user.JPG" alt="User">
             <span>Welcome Back</span>
             <span id="userName"></span>
-            <span>ID Karyawan: <span id="userIdWorker"></span></span>
-            <span>Plat Nomor: <span id="userPlateNumber"></span></span>
             <button class="profile" onclick="window.location.href='profile.html'">Profile</button>
+            <button class="form-message" onclick="window.location.href='index.html'">Form Message</button>
             <button class="logout">Log Out</button>
         </div>
         <div class="feature-box live-overview">
@@ -238,8 +237,6 @@
                 return;
             }
             document.getElementById('userName').textContent = currentUser.username;
-            document.getElementById('userIdWorker').textContent = currentUser.idWorker;
-            document.getElementById('userPlateNumber').textContent = currentUser.plateNumber || 'None';
             document.getElementById('profilePic').src = currentUser.profilePic || '/assets/user.JPG';
             document.getElementById('detailName').textContent = currentUser.username;
             document.getElementById('detailIdWorker').textContent = currentUser.idWorker;

@@ -278,9 +278,8 @@
             <img id="profilePic" src="/assets/user.JPG" alt="User">
             <span>Welcome Back</span>
             <span id="userName"></span>
-            <span>ID Karyawan: <span id="userIdWorker"></span></span>
-            <span>Plat Nomor: <span id="userPlateNumber"></span></span>
             <button class="profile" onclick="window.location.href='profile.html'">Profile</button>
+            <button class="form-message" onclick="window.location.href='index.html'">Form Message</button>
             <button class="logout">Log Out</button>
         </div>
         <div class="feature-box live-overview">
@@ -399,8 +398,6 @@
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             const userInfo = document.getElementById('userInfo');
             const userName = document.getElementById('userName');
-            const userIdWorker = document.getElementById('userIdWorker');
-            const userPlateNumber = document.getElementById('userPlateNumber');
             const profilePic = document.getElementById('profilePic');
             const previewPic = document.getElementById('previewPic');
             const usernameInput = document.getElementById('username');
@@ -421,8 +418,6 @@
                 return;
             } else {
                 userName.textContent = currentUser.username;
-                userIdWorker.textContent = currentUser.idWorker;
-                userPlateNumber.textContent = currentUser.plateNumber || 'None';
                 profilePic.src = currentUser.profilePic || '/assets/user.JPG';
                 previewPic.src = currentUser.profilePic || '/assets/user.JPG';
                 usernameInput.value = currentUser.username;
@@ -502,8 +497,6 @@
                             const updatedUser = auth.updateUser(currentUser.email, updatedData);
                             localStorage.setItem('currentUser', JSON.stringify(updatedUser));
                             userName.textContent = updatedUser.username;
-                            userIdWorker.textContent = updatedUser.idWorker;
-                            userPlateNumber.textContent = updatedUser.plateNumber || 'None';
                             profilePic.src = updatedUser.profilePic;
                             previewPic.src = updatedUser.profilePic;
                             detailNameInput.value = updatedUser.username;
@@ -517,8 +510,6 @@
                         const updatedUser = auth.updateUser(currentUser.email, updatedData);
                         localStorage.setItem('currentUser', JSON.stringify(updatedUser));
                         userName.textContent = updatedUser.username;
-                        userIdWorker.textContent = updatedUser.idWorker;
-                        userPlateNumber.textContent = updatedUser.plateNumber || 'None';
                         profilePic.src = updatedUser.profilePic || '/assets/user.JPG';
                         previewPic.src = updatedUser.profilePic || '/assets/user.JPG';
                         detailNameInput.value = updatedUser.username;
