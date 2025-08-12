@@ -180,6 +180,21 @@
             object-fit: cover;
         }
 
+        .profile-container .detail {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .profile-container .detail label {
+            font-weight: bold;
+            display: block;
+            color: #555;
+        }
+
+        .profile-container .detail span {
+            color: #007bff;
+        }
+
         .profile-container input[type="text"],
         .profile-container input[type="password"],
         .profile-container input[type="file"] {
@@ -243,32 +258,31 @@
         </div>
     </header>
     <aside class="toolbar" id="toolbar">
-        <div class="feature-box">
-            <h3>Parking Management System</h3>
-        </div>
-        <div class="feature-box">
-            <button class="live-overview" onclick="window.location.href='/index.html'">Live Overview</button>
-            <button class="prev-analysis" onclick="window.location.href='/previous-analysis.html'">Previous Analysis</button>
-        </div>
         <div class="feature-box user-info" id="userInfo">
             <h3>User</h3>
             <img id="profilePic" src="/assets/user.JPG" alt="User">
             <span>Welcome Back</span>
             <span id="userName"></span>
+            <button class="profile" onclick="window.location.href='profile.html'">Profile</button>
             <button class="logout">Log Out</button>
-        </div>
-        <div class="feature-box">
-            <button class="export-data">Export Data</button>
-            <button class="3d-viewer-vr">3D Viewer VR</button>
-            <button class="helpdesk">Helpdesk</button>
-            <button class="profile" onclick="window.location.href='/profile.html'">Profile</button>
-            <button class="parking-analysis">Parking Analysis</button>
         </div>
     </aside>
     <main class="main-content">
         <div class="profile-container">
             <h2>Profile Settings</h2>
             <img id="previewPic" src="/assets/user.JPG" alt="Profile Picture">
+            <div class="detail">
+                <label>Nama:</label>
+                <span id="detailName"></span>
+            </div>
+            <div class="detail">
+                <label>Email:</label>
+                <span id="detailEmail"></span>
+            </div>
+            <div class="detail">
+                <label>Plat Nomor Mobil:</label>
+                <input type="text" id="plateNumber" placeholder="Plat Nomor Mobil">
+            </div>
             <input type="file" id="profilePicture" accept="image/*">
             <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="New Password">
@@ -281,11 +295,12 @@
     <script>
         // Authentication System
         class User {
-            constructor(username, email, password, idWorker, profilePic = '/assets/user.JPG') {
+            constructor(username, email, password, idWorker, plateNumber = '', profilePic = '/assets/user.JPG') {
                 this.username = username;
                 this.email = email;
                 this.password = password;
                 this.idWorker = idWorker;
+                this.plateNumber = plateNumber;
                 this.profilePic = profilePic;
             }
         }
@@ -319,19 +334,25 @@
             const passwordInput = document.getElementById('password');
             const confirmPasswordInput = document.getElementById('confirmPassword');
             const profilePictureInput = document.getElementById('profilePicture');
+            const plateNumberInput = document.getElementById('plateNumber');
             const saveProfileBtn = document.getElementById('saveProfile');
             const errorMessage = document.getElementById('error-message');
             const successMessage = document.getElementById('success-message');
+            const detailName = document.getElementById('detailName');
+            const detailEmail = document.getElementById('detailEmail');
 
             if (!currentUser) {
                 alert('Silakan login terlebih dahulu!');
-                window.location.replace('/login.html');
+                window.location.replace('login.html');
                 return;
             } else {
                 userName.textContent = currentUser.username;
                 profilePic.src = currentUser.profilePic || '/assets/user.JPG';
                 previewPic.src = currentUser.profilePic || '/assets/user.JPG';
                 usernameInput.value = currentUser.username;
+                plateNumberInput.value = currentUser.plateNumber || '';
+                detailName.textContent = currentUser.username;
+                detailEmail.textContent = currentUser.email;
             }
 
             // Toggle Toolbar
@@ -345,7 +366,7 @@
             document.querySelector('.logout').addEventListener('click', () => {
                 localStorage.removeItem('currentUser');
                 alert('Berhasil logout!');
-                window.location.replace('/login.html');
+                window.location.replace('login.html');
             });
 
             // Profile Picture Preview
@@ -366,6 +387,7 @@
                 const newPassword = passwordInput.value;
                 const confirmPassword = confirmPasswordInput.value;
                 const file = profilePictureInput.files[0];
+                const newPlateNumber = plateNumberInput.value.trim();
 
                 errorMessage.style.display = 'none';
                 successMessage.style.display = 'none';
@@ -383,7 +405,10 @@
                 }
 
                 try {
-                    let updatedData = { username: newUsername };
+                    let updatedData = { 
+                        username: newUsername,
+                        plateNumber: newPlateNumber
+                    };
                     if (newPassword) {
                         updatedData.password = newPassword;
                     }
@@ -396,6 +421,8 @@
                             userName.textContent = updatedUser.username;
                             profilePic.src = updatedUser.profilePic;
                             previewPic.src = updatedUser.profilePic;
+                            detailName.textContent = updatedUser.username;
+                            plateNumberInput.value = updatedUser.plateNumber;
                             successMessage.textContent = 'Profile updated successfully!';
                             successMessage.style.display = 'block';
                         };
@@ -406,6 +433,8 @@
                         userName.textContent = updatedUser.username;
                         profilePic.src = updatedUser.profilePic || '/assets/user.JPG';
                         previewPic.src = updatedUser.profilePic || '/assets/user.JPG';
+                        detailName.textContent = updatedUser.username;
+                        plateNumberInput.value = updatedUser.plateNumber;
                         successMessage.textContent = 'Profile updated successfully!';
                         successMessage.style.display = 'block';
                     }
@@ -428,7 +457,7 @@
                 event.preventDefault();
                 event.stopPropagation();
                 if (!localStorage.getItem('currentUser')) {
-                    window.location.replace('/login.html');
+                    window.location.replace('login.html');
                 } else {
                     history.replaceState(null, null, window.location.href);
                 }

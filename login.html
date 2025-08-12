@@ -264,7 +264,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Redirect to login if no user session
             if (localStorage.getItem('currentUser')) {
-                window.location.replace('/index.html');
+                window.location.replace('index.html');
                 return;
             }
 
@@ -279,7 +279,7 @@
                     const user = auth.login(email, password);
                     alert('Login successful!');
                     localStorage.setItem('currentUser', JSON.stringify(user));
-                    window.location.replace('/index.html');
+                    window.location.replace('index.html');
                 } catch (error) {
                     alert(error.message);
                 }
