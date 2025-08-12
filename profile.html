@@ -148,6 +148,21 @@
             color: black;
         }
 
+        .toolbar .live-overview {
+            text-align: left;
+        }
+
+        .toolbar .live-overview .status {
+            margin: 8px 0;
+            font-size: 12px;
+            color: black;
+        }
+
+        .toolbar .live-overview .status span {
+            font-weight: bold;
+            color: #007bff;
+        }
+
         .main-content {
             margin-left: 0;
             padding: 80px 20px 20px;
@@ -263,8 +278,23 @@
             <img id="profilePic" src="/assets/user.JPG" alt="User">
             <span>Welcome Back</span>
             <span id="userName"></span>
+            <span>ID Karyawan: <span id="userIdWorker"></span></span>
+            <span>Plat Nomor: <span id="userPlateNumber"></span></span>
             <button class="profile" onclick="window.location.href='profile.html'">Profile</button>
             <button class="logout">Log Out</button>
+        </div>
+        <div class="feature-box live-overview">
+            <h3>Live Overview</h3>
+            <div class="status">
+                <span id="availableSpots">0</span> Available Parking Spots
+            </div>
+            <div class="status">
+                <span id="occupiedSpots">0</span> Occupied Parking Spots
+            </div>
+            <div class="status">
+                Last Activity: <span id="lastActivity">None</span>
+            </div>
+            <button onclick="refreshOverview()">Refresh</button>
         </div>
     </aside>
     <main class="main-content">
@@ -273,11 +303,15 @@
             <img id="previewPic" src="/assets/user.JPG" alt="Profile Picture">
             <div class="detail">
                 <label>Nama:</label>
-                <span id="detailName"></span>
+                <input type="text" id="detailName" placeholder="Nama">
             </div>
             <div class="detail">
                 <label>Email:</label>
                 <span id="detailEmail"></span>
+            </div>
+            <div class="detail">
+                <label>ID Karyawan:</label>
+                <input type="text" id="idWorker" placeholder="ID Karyawan">
             </div>
             <div class="detail">
                 <label>Plat Nomor Mobil:</label>
@@ -323,11 +357,50 @@
 
         const auth = new AuthSystem();
 
+        // Simulated parking data (replace with actual API call in production)
+        class ParkingSystem {
+            constructor() {
+                this.parkingData = {
+                    availableSpots: 10,
+                    occupiedSpots: 5,
+                    lastActivity: 'Vehicle entered at ' + new Date().toLocaleTimeString()
+                };
+            }
+
+            getOverview() {
+                return this.parkingData;
+            }
+
+            refreshOverview() {
+                // Simulate data refresh (replace with actual API call)
+                this.parkingData.availableSpots = Math.floor(Math.random() * 20);
+                this.parkingData.occupiedSpots = Math.floor(Math.random() * 10);
+                this.parkingData.lastActivity = 'Vehicle ' + (Math.random() > 0.5 ? 'entered' : 'exited') + ' at ' + new Date().toLocaleTimeString();
+                return this.parkingData;
+            }
+        }
+
+        const parkingSystem = new ParkingSystem();
+
+        function updateOverviewDisplay() {
+            const data = parkingSystem.getOverview();
+            document.getElementById('availableSpots').textContent = data.availableSpots;
+            document.getElementById('occupiedSpots').textContent = data.occupiedSpots;
+            document.getElementById('lastActivity').textContent = data.lastActivity;
+        }
+
+        function refreshOverview() {
+            parkingSystem.refreshOverview();
+            updateOverviewDisplay();
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             // Authentication Check
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             const userInfo = document.getElementById('userInfo');
             const userName = document.getElementById('userName');
+            const userIdWorker = document.getElementById('userIdWorker');
+            const userPlateNumber = document.getElementById('userPlateNumber');
             const profilePic = document.getElementById('profilePic');
             const previewPic = document.getElementById('previewPic');
             const usernameInput = document.getElementById('username');
@@ -335,11 +408,12 @@
             const confirmPasswordInput = document.getElementById('confirmPassword');
             const profilePictureInput = document.getElementById('profilePicture');
             const plateNumberInput = document.getElementById('plateNumber');
+            const idWorkerInput = document.getElementById('idWorker');
+            const detailNameInput = document.getElementById('detailName');
+            const detailEmail = document.getElementById('detailEmail');
             const saveProfileBtn = document.getElementById('saveProfile');
             const errorMessage = document.getElementById('error-message');
             const successMessage = document.getElementById('success-message');
-            const detailName = document.getElementById('detailName');
-            const detailEmail = document.getElementById('detailEmail');
 
             if (!currentUser) {
                 alert('Silakan login terlebih dahulu!');
@@ -347,13 +421,19 @@
                 return;
             } else {
                 userName.textContent = currentUser.username;
+                userIdWorker.textContent = currentUser.idWorker;
+                userPlateNumber.textContent = currentUser.plateNumber || 'None';
                 profilePic.src = currentUser.profilePic || '/assets/user.JPG';
                 previewPic.src = currentUser.profilePic || '/assets/user.JPG';
                 usernameInput.value = currentUser.username;
+                detailNameInput.value = currentUser.username;
+                idWorkerInput.value = currentUser.idWorker;
                 plateNumberInput.value = currentUser.plateNumber || '';
-                detailName.textContent = currentUser.username;
                 detailEmail.textContent = currentUser.email;
             }
+
+            // Initialize Live Overview
+            updateOverviewDisplay();
 
             // Toggle Toolbar
             const toggleToolbar = document.getElementById('toggleToolbar');
@@ -384,16 +464,18 @@
             // Save Profile Changes
             saveProfileBtn.addEventListener('click', () => {
                 const newUsername = usernameInput.value.trim();
+                const newDetailName = detailNameInput.value.trim();
+                const newIdWorker = idWorkerInput.value.trim();
+                const newPlateNumber = plateNumberInput.value.trim();
                 const newPassword = passwordInput.value;
                 const confirmPassword = confirmPasswordInput.value;
                 const file = profilePictureInput.files[0];
-                const newPlateNumber = plateNumberInput.value.trim();
 
                 errorMessage.style.display = 'none';
                 successMessage.style.display = 'none';
 
-                if (!newUsername) {
-                    errorMessage.textContent = 'Username cannot be empty!';
+                if (!newUsername || !newDetailName || !newIdWorker) {
+                    errorMessage.textContent = 'Username, Name, and Employee ID cannot be empty!';
                     errorMessage.style.display = 'block';
                     return;
                 }
@@ -407,6 +489,7 @@
                 try {
                     let updatedData = { 
                         username: newUsername,
+                        idWorker: newIdWorker,
                         plateNumber: newPlateNumber
                     };
                     if (newPassword) {
@@ -419,9 +502,12 @@
                             const updatedUser = auth.updateUser(currentUser.email, updatedData);
                             localStorage.setItem('currentUser', JSON.stringify(updatedUser));
                             userName.textContent = updatedUser.username;
+                            userIdWorker.textContent = updatedUser.idWorker;
+                            userPlateNumber.textContent = updatedUser.plateNumber || 'None';
                             profilePic.src = updatedUser.profilePic;
                             previewPic.src = updatedUser.profilePic;
-                            detailName.textContent = updatedUser.username;
+                            detailNameInput.value = updatedUser.username;
+                            idWorkerInput.value = updatedUser.idWorker;
                             plateNumberInput.value = updatedUser.plateNumber;
                             successMessage.textContent = 'Profile updated successfully!';
                             successMessage.style.display = 'block';
@@ -431,9 +517,12 @@
                         const updatedUser = auth.updateUser(currentUser.email, updatedData);
                         localStorage.setItem('currentUser', JSON.stringify(updatedUser));
                         userName.textContent = updatedUser.username;
+                        userIdWorker.textContent = updatedUser.idWorker;
+                        userPlateNumber.textContent = updatedUser.plateNumber || 'None';
                         profilePic.src = updatedUser.profilePic || '/assets/user.JPG';
                         previewPic.src = updatedUser.profilePic || '/assets/user.JPG';
-                        detailName.textContent = updatedUser.username;
+                        detailNameInput.value = updatedUser.username;
+                        idWorkerInput.value = updatedUser.idWorker;
                         plateNumberInput.value = updatedUser.plateNumber;
                         successMessage.textContent = 'Profile updated successfully!';
                         successMessage.style.display = 'block';
