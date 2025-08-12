@@ -40,8 +40,15 @@
         .user-details h2 { margin-top: 0; color: #007bff; font-size: 16px; }
         .user-details .detail { margin-bottom: 10px; font-size: 14px; }
         .user-details .detail label { font-weight: bold; display: block; color: #555; }
-        .user-details .detail span { color: #007bff; }
-        .user-details .actions { display: flex; justify-content: space-between; }
+        .user-details .detail input, .user-details .detail select, .user-details .detail textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .user-details .actions { display: flex; justify-content: space-between; margin-top: 15px; }
         .user-details .actions button { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; transition: background-color 0.3s; }
         .user-details .actions .in-btn { background-color: green; color: white; }
         .user-details .actions .in-btn:hover { background-color: darkgreen; }
@@ -104,19 +111,27 @@
             <div class="user-details">
                 <h2>User Details</h2>
                 <div class="detail">
-                    <label>Nama:</label>
-                    <span id="detailName"></span>
+                    <label for="detailName">Nama:</label>
+                    <input type="text" id="detailName" readonly>
                 </div>
                 <div class="detail">
-                    <label>ID Karyawan:</label>
-                    <span id="detailIdWorker"></span>
+                    <label for="detailIdWorker">ID Karyawan:</label>
+                    <input type="text" id="detailIdWorker" readonly>
                 </div>
                 <div class="detail">
-                    <label>Plat Nomor Mobil:</label>
-                    <span id="detailPlate"></span>
+                    <label for="detailPlate">Plat Nomor Mobil:</label>
+                    <input type="text" id="detailPlate" readonly>
                 </div>
                 <div class="detail">
-                    <label>Pilih Slot Parkir:</label>
+                    <label for="contactNumber">Nomor Kontak:</label>
+                    <input type="tel" id="contactNumber" placeholder="Masukkan nomor kontak">
+                </div>
+                <div class="detail">
+                    <label for="parkingNotes">Catatan Parkir:</label>
+                    <textarea id="parkingNotes" placeholder="Masukkan catatan parkir" rows="3"></textarea>
+                </div>
+                <div class="detail">
+                    <label for="slotSelect">Pilih Slot Parkir:</label>
                     <select id="slotSelect">
                         <option value="">-- Pilih Slot --</option>
                         <script>
@@ -215,15 +230,22 @@
             const timestamp = new Date();
             const options = { timeZone: 'Asia/Jakarta', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false };
             const timeString = new Intl.DateTimeFormat('en-US', options).format(timestamp) + ' WIB';
+            const contactNumber = document.getElementById('contactNumber').value || 'None';
+            const parkingNotes = document.getElementById('parkingNotes').value || 'None';
 
             firebase.database().ref(`slot_message_user/${slotKey}`).set({
                 lastAction: action,
                 user: user.username,
                 idWorker: user.idWorker,
                 plate: user.plateNumber || 'None',
+                contactNumber: contactNumber,
+                parkingNotes: parkingNotes,
                 timestamp: timeString
             }).then(() => {
                 alert(`✅ ${action} untuk ${slotKey} berhasil dikirim!`);
+                // Clear input fields after successful submission
+                document.getElementById('contactNumber').value = '';
+                document.getElementById('parkingNotes').value = '';
             }).catch(err => {
                 console.error('❌ Gagal mengirim pesan:', err);
             });
@@ -238,9 +260,9 @@
             }
             document.getElementById('userName').textContent = currentUser.username;
             document.getElementById('profilePic').src = currentUser.profilePic || '/assets/user.JPG';
-            document.getElementById('detailName').textContent = currentUser.username;
-            document.getElementById('detailIdWorker').textContent = currentUser.idWorker;
-            document.getElementById('detailPlate').textContent = currentUser.plateNumber || 'None';
+            document.getElementById('detailName').value = currentUser.username;
+            document.getElementById('detailIdWorker').value = currentUser.idWorker;
+            document.getElementById('detailPlate').value = currentUser.plateNumber || 'None';
 
             document.querySelector('.logout').addEventListener('click', () => {
                 localStorage.removeItem('currentUser');
@@ -272,6 +294,15 @@
             document.querySelector('.out-btn').addEventListener('click', () => {
                 const selectedSlot = document.getElementById('slotSelect').value;
                 sendSlotMessage(selectedSlot, 'Mobil Keluar', currentUser);
+            });
+
+            // Prevent Undo/Redo
+            document.addEventListener('keydown', (event) => {
+                if ((event.ctrlKey || event.metaKey) && (event.key === 'z' || event.key === 'y' || event.key === 'Z' || event.key === 'Y')) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    console.log('Undo/Redo is disabled');
+                }
             });
         });
     </script>
