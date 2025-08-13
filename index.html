@@ -360,8 +360,8 @@
         .slot.occupied.exiting .car {
             animation: carExit 0.5s ease-in-out forwards;
         }
-        /* Pop-up Modal Styles */
-        .modal-overlay {
+        /* Guided Tour Pop-up Styles */
+        .tour-overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -370,68 +370,97 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 2000;
-            justify-content: center;
-            align-items: center;
+            pointer-events: none;
         }
-        .modal-content {
+        .tour-tooltip {
+            position: absolute;
             background-color: lightgrey;
             border: 2px solid #dc3545;
             border-radius: 8px;
-            padding: 20px;
-            max-width: 500px;
-            width: 90%;
+            padding: 15px;
+            max-width: 300px;
             text-align: center;
             font-family: Arial, sans-serif;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            position: relative;
+            pointer-events: auto;
             animation: fadeIn 0.3s ease-in-out;
+            z-index: 2001;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .modal-content h2 {
+        .tour-tooltip h3 {
             color: #007bff;
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 16px;
+            margin-bottom: 10px;
         }
-        .modal-content p {
-            font-size: 14px;
+        .tour-tooltip p {
+            font-size: 13px;
             color: #555;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             line-height: 1.5;
         }
-        .modal-content .modal-buttons {
+        .tour-tooltip .tour-buttons {
             display: flex;
             justify-content: space-between;
             gap: 10px;
         }
-        .modal-content button {
-            padding: 8px 15px;
+        .tour-tooltip button {
+            padding: 8px 12px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 12px;
             transition: background-color 0.3s;
         }
-        .modal-content .prev-btn, .modal-content .next-btn {
+        .tour-tooltip .next-btn {
             background-color: #007bff;
             color: white;
         }
-        .modal-content .prev-btn:hover, .modal-content .next-btn:hover {
+        .tour-tooltip .next-btn:hover {
             background-color: #0056b3;
         }
-        .modal-content .close-btn {
+        .tour-tooltip .close-btn {
             background-color: #dc3545;
             color: white;
         }
-        .modal-content .close-btn:hover {
+        .tour-tooltip .close-btn:hover {
             background-color: #c82333;
         }
-        .modal-content .step-indicator {
-            font-size: 12px;
-            color: #555;
-            margin-top: 10px;
+        .tour-tooltip:after {
+            content: "";
+            position: absolute;
+            border: 10px solid transparent;
+            pointer-events: none;
+        }
+        .tour-tooltip.right:after {
+            border-right-color: lightgrey;
+            border-right-width: 10px;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .tour-tooltip.left:after {
+            border-left-color: lightgrey;
+            border-left-width: 10px;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .tour-tooltip.top:after {
+            border-top-color: lightgrey;
+            border-top-width: 10px;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .tour-tooltip.bottom:after {
+            border-bottom-color: lightgrey;
+            border-bottom-width: 10px;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
@@ -563,17 +592,15 @@
                 </div>
             </div>
         </div>
-        <!-- Pop-up Modal -->
-        <div class="modal-overlay" id="helpModal">
-            <div class="modal-content">
-                <h2 id="modalTitle">Welcome to BRIN Parking Management</h2>
-                <p id="modalText">This guide will help you navigate the website's features.</p>
-                <div class="modal-buttons">
-                    <button class="prev-btn" id="prevBtn">Previous</button>
-                    <button class="next-btn" id="nextBtn">Next</button>
-                    <button class="close-btn" id="closeBtn">Close</button>
-                </div>
-                <div class="step-indicator" id="stepIndicator">Step 1 of 4</div>
+        <!-- Guided Tour Overlay -->
+        <div class="tour-overlay" id="tourOverlay"></div>
+        <!-- Guided Tour Tooltip -->
+        <div class="tour-tooltip" id="tourTooltip" style="display: none;">
+            <h3 id="tooltipTitle"></h3>
+            <p id="tooltipText"></p>
+            <div class="tour-buttons">
+                <button class="next-btn" id="tourNextBtn">Next</button>
+                <button class="close-btn" id="tourCloseBtn">Close</button>
             </div>
         </div>
     </main>
@@ -697,50 +724,81 @@
             });
         }
 
-        // Pop-up Modal Logic
-        const helpSteps = [
+        // Guided Tour Logic
+        const tourSteps = [
             {
-                title: "Welcome to BRIN Parking Management",
-                text: "This guide will help you navigate the website's features. Click 'Next' to learn about the main sections."
+                element: '.about-us',
+                title: "Tentang Perusahaan",
+                text: "Ini adalah bagian About Us yang menjelaskan tentang BRIN Cisitu Bandung sebagai pusat riset dan inovasi.",
+                position: 'right' // Position of the tooltip relative to the element
             },
             {
-                title: "About Us",
-                text: "This section provides information about BRIN Cisitu Bandung, a leading research hub. Click the 'For Our Location' button to view our location on Google Maps."
+                element: '.user-details',
+                title: "Form Message Parking",
+                text: "Gunakan form ini untuk mengisi data parkir pengguna, seperti nama, ID karyawan, plat nomor, nomor kontak, dan catatan parkir. Pilih slot parkir dan klik 'Mobil Masuk' atau 'Mobil Keluar'.",
+                position: 'right'
             },
             {
-                title: "Live Overview",
-                text: "View real-time parking statistics, including occupied and available slots, current time, and daily car activity."
-            },
-            {
-                title: "Form Message Parking & Park Condition",
-                text: "Use the form to log vehicle entries and exits by selecting a parking slot and adding details. The 2D parking layout shows which slots are occupied."
+                element: '.park-condition-2d',
+                title: "Park Condition 2D",
+                text: "Tampilan 2D ini menunjukkan status slot parkir. Slot kuning berarti ditempati, dan perubahan dari form akan tercermin di sini.",
+                position: 'left'
             }
         ];
 
-        let currentStep = 0;
+        let currentTourStep = 0;
 
-        function updateModalContent() {
-            const modalTitle = document.getElementById('modalTitle');
-            const modalText = document.getElementById('modalText');
-            const stepIndicator = document.getElementById('stepIndicator');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-
-            modalTitle.textContent = helpSteps[currentStep].title;
-            modalText.textContent = helpSteps[currentStep].text;
-            stepIndicator.textContent = `Step ${currentStep + 1} of ${helpSteps.length}`;
-
-            prevBtn.style.display = currentStep === 0 ? 'none' : 'inline-block';
-            nextBtn.style.display = currentStep === helpSteps.length - 1 ? 'none' : 'inline-block';
+        function startTour() {
+            document.getElementById('tourOverlay').style.display = 'block';
+            showTooltip(currentTourStep);
         }
 
-        function showModal() {
-            document.getElementById('helpModal').style.display = 'flex';
-            updateModalContent();
+        function showTooltip(step) {
+            const tooltip = document.getElementById('tourTooltip');
+            const title = document.getElementById('tooltipTitle');
+            const text = document.getElementById('tooltipText');
+            const nextBtn = document.getElementById('tourNextBtn');
+
+            const targetElement = document.querySelector(tourSteps[step].element);
+            if (!targetElement) return;
+
+            title.textContent = tourSteps[step].title;
+            text.textContent = tourSteps[step].text;
+            tooltip.style.display = 'block';
+            tooltip.className = 'tour-tooltip ' + tourSteps[step].position;
+
+            const rect = targetElement.getBoundingClientRect();
+            const tooltipRect = tooltip.getBoundingClientRect();
+            let left, top;
+
+            switch (tourSteps[step].position) {
+                case 'right':
+                    left = rect.right + 10;
+                    top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+                    break;
+                case 'left':
+                    left = rect.left - tooltipRect.width - 10;
+                    top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+                    break;
+                case 'top':
+                    left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+                    top = rect.top - tooltipRect.height - 10;
+                    break;
+                case 'bottom':
+                    left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+                    top = rect.bottom + 10;
+                    break;
+            }
+
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${top}px`;
+
+            nextBtn.textContent = step === tourSteps.length - 1 ? 'Finish' : 'Next';
         }
 
-        function closeModal() {
-            document.getElementById('helpModal').style.display = 'none';
+        function endTour() {
+            document.getElementById('tourOverlay').style.display = 'none';
+            document.getElementById('tourTooltip').style.display = 'none';
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -797,25 +855,20 @@
                 }
             });
 
-            // Pop-up Modal Event Listeners
-            document.getElementById('prevBtn').addEventListener('click', () => {
-                if (currentStep > 0) {
-                    currentStep--;
-                    updateModalContent();
+            // Guided Tour Event Listeners
+            document.getElementById('tourNextBtn').addEventListener('click', () => {
+                currentTourStep++;
+                if (currentTourStep < tourSteps.length) {
+                    showTooltip(currentTourStep);
+                } else {
+                    endTour();
                 }
             });
 
-            document.getElementById('nextBtn').addEventListener('click', () => {
-                if (currentStep < helpSteps.length - 1) {
-                    currentStep++;
-                    updateModalContent();
-                }
-            });
+            document.getElementById('tourCloseBtn').addEventListener('click', endTour);
 
-            document.getElementById('closeBtn').addEventListener('click', closeModal);
-
-            // Show modal on page load
-            showModal();
+            // Start the tour on page load
+            startTour();
         });
     </script>
 </body>
