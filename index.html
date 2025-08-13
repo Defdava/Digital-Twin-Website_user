@@ -702,8 +702,10 @@
                 return;
             }
             const timestamp = new Date();
-            const options = { timeZone: 'Asia/Jakarta', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false };
-            const timeString = new Intl.DateTimeFormat('en-US', options).format(timestamp) + ' WIB';
+            const optionsTime = { timeZone: 'Asia/Jakarta', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false };
+            const optionsDate = { timeZone: 'Asia/Jakarta', day: '2-digit', month: '2-digit', year: 'numeric' };
+            const timeString = new Intl.DateTimeFormat('en-US', optionsTime).format(timestamp) + ' WIB';
+            const dateString = new Intl.DateTimeFormat('en-GB', optionsDate).format(timestamp).split('/').join('-');
             const contactNumber = document.getElementById('contactNumber').value || 'None';
             const parkingNotes = document.getElementById('parkingNotes').value || 'None';
 
@@ -714,6 +716,7 @@
                 plate: user.plateNumber || 'None',
                 contactNumber: contactNumber,
                 parkingNotes: parkingNotes,
+                date: dateString,
                 timestamp: timeString
             }).then(() => {
                 alert(`✅ ${action} untuk ${slotKey} berhasil dikirim!`);
