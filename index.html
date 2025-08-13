@@ -94,9 +94,6 @@
             transition: left 0.3s ease-in-out; 
             z-index: 999; 
             overflow-y: auto; 
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
         }
         .toolbar.active { 
             left: 0; 
@@ -129,30 +126,6 @@
         .toolbar .feature-box button:hover { 
             background-color: darkslategrey; 
         }
-        .toolbar .about-us { 
-            text-align: left; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-        }
-        .toolbar .about-us img { 
-            width: 100%; 
-            max-width: 150px; 
-            border-radius: 8px; 
-            margin-bottom: 10px; 
-        }
-        .toolbar .about-us p { 
-            font-size: 12px; 
-            color: black; 
-            margin: 0; 
-        }
-        .toolbar .about-us a button { 
-            background-color: #007bff; 
-            color: white; 
-        }
-        .toolbar .about-us a button:hover { 
-            background-color: #0056b3; 
-        }
         .toolbar .user-info { 
             text-align: center; 
         }
@@ -180,7 +153,7 @@
             font-weight: bold; 
             color: #007bff; 
         }
-        .overview, .user-details, .park-condition-2d { 
+        .overview, .user-details, .park-condition-2d, .about-us { 
             background-color: lightgrey; 
             padding: 10px; 
             border-radius: 8px; 
@@ -190,7 +163,7 @@
         .park-condition-2d {
             padding: 15px;
         }
-        .overview h1 { 
+        .overview h1, .about-us h1 { 
             margin: 0 0 10px; 
             color: #007bff; 
             font-size: 16px; 
@@ -218,6 +191,35 @@
         .stats span:last-child { 
             font-size: 12px; 
             color: #007bff; 
+        }
+        .about-us .content { 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 10px; 
+        }
+        .about-us img { 
+            width: 100px; 
+            height: auto; 
+            border-radius: 8px; 
+        }
+        .about-us p { 
+            font-size: 12px; 
+            color: #555; 
+            margin: 0 0 10px; 
+            flex: 1; 
+        }
+        .about-us a button { 
+            padding: 8px 12px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 12px; 
+            transition: background-color 0.3s; 
+        }
+        .about-us a button:hover { 
+            background-color: #0056b3; 
         }
         .user-details h2 { 
             margin-top: 0; 
@@ -360,12 +362,6 @@
         </div>
     </header>
     <aside class="toolbar" id="toolbar">
-        <div class="feature-box about-us">
-            <h3>About Us</h3>
-            <img src="https://github.com/Defdava/Digital-Twin-Website-used/blob/main/Logo_BRIN.png?raw=true" alt="BRIN Logo">
-            <p>BRIN Cisitu Bandung merupakan salah satu kawasan riset milik Badan Riset dan Inovasi Nasional yang berlokasi di Kawasan Sains dan Teknologi Samaun Samadikun, Jalan Sangkuriang, Dago, Kecamatan Coblong, Bandung. Kawasan ini menjadi pusat berbagai kegiatan penelitian dan inovasi, termasuk pengembangan kecerdasan artifisial, keamanan siber, dan teknologi telekomunikasi. Di sini, para peneliti, mahasiswa, dan praktisi dari berbagai institusi berkolaborasi dalam proyek-proyek unggulan seperti digitalisasi naskah kuno berbasis machine learning serta pengembangan solusi teknologi untuk kebutuhan industri dan masyarakat. Fasilitas yang memadai serta lingkungan yang kondusif menjadikan BRIN Cisitu Bandung sebagai salah satu pusat inovasi dan pengembangan ilmu pengetahuan terkemuka di Indonesia.</p>
-            <a href="https://share.google/SvuFGBZcGBeEERAHt" target="_blank"><button>For Our Location</button></a>
-        </div>
         <div class="feature-box user-info" id="userInfo">
             <h3>User</h3>
             <img id="profilePic" src="/assets/user.JPG" alt="User">
@@ -391,6 +387,16 @@
     </aside>
     <main class="main-content">
         <div class="main-content-grid">
+            <div class="about-us">
+                <h1>About Us</h1>
+                <div class="content">
+                    <img src="https://github.com/Defdava/Digital-Twin-Website-used/blob/main/Logo_BRIN.png?raw=true" alt="BRIN Logo">
+                    <div>
+                        <p>BRIN Cisitu Bandung merupakan salah satu kawasan riset milik Badan Riset dan Inovasi Nasional yang berlokasi di Kawasan Sains dan Teknologi Samaun Samadikun, Jalan Sangkuriang, Dago, Kecamatan Coblong, Bandung. Kawasan ini menjadi pusat berbagai kegiatan penelitian dan inovasi, termasuk pengembangan kecerdasan artifisial, keamanan siber, dan teknologi telekomunikasi. Di sini, para peneliti, mahasiswa, dan praktisi dari berbagai institusi berkolaborasi dalam proyek-proyek unggulan seperti digitalisasi naskah kuno berbasis machine learning serta pengembangan solusi teknologi untuk kebutuhan industri dan masyarakat. Fasilitas yang memadai serta lingkungan yang kondusif menjadikan BRIN Cisitu Bandung sebagai salah satu pusat inovasi dan pengembangan ilmu pengetahuan terkemuka di Indonesia.</p>
+                        <a href="https://share.google/SvuFGBZcGBeEERAHt" target="_blank"><button>For Our Location</button></a>
+                    </div>
+                </div>
+            </div>
             <div class="overview">
                 <h1>Live Overview</h1>
                 <div class="stats">
@@ -422,9 +428,7 @@
                 </div>
                 <div class="detail">
                     <label for="parkingNotes">Catatan Parkir:</label>
-                    <textarea id="parkingNotes" placeholder="Mas --
-
-ukkan catatan parkir" rows="3"></textarea>
+                    <textarea id="parkingNotes" placeholder="Masukkan catatan parkir" rows="3"></textarea>
                 </div>
                 <div class="detail">
                     <label for="slotSelect">Pilih Slot Parkir:</label>
