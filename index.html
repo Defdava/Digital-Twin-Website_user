@@ -360,6 +360,79 @@
         .slot.occupied.exiting .car {
             animation: carExit 0.5s ease-in-out forwards;
         }
+        /* Pop-up Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: lightgrey;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-content h2 {
+            color: #007bff;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .modal-content p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .modal-content .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .modal-content button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+        .modal-content .prev-btn, .modal-content .next-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .modal-content .prev-btn:hover, .modal-content .next-btn:hover {
+            background-color: #0056b3;
+        }
+        .modal-content .close-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .modal-content .close-btn:hover {
+            background-color: #c82333;
+        }
+        .modal-content .step-indicator {
+            font-size: 12px;
+            color: #555;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -490,6 +563,19 @@
                 </div>
             </div>
         </div>
+        <!-- Pop-up Modal -->
+        <div class="modal-overlay" id="helpModal">
+            <div class="modal-content">
+                <h2 id="modalTitle">Welcome to BRIN Parking Management</h2>
+                <p id="modalText">This guide will help you navigate the website's features.</p>
+                <div class="modal-buttons">
+                    <button class="prev-btn" id="prevBtn">Previous</button>
+                    <button class="next-btn" id="nextBtn">Next</button>
+                    <button class="close-btn" id="closeBtn">Close</button>
+                </div>
+                <div class="step-indicator" id="stepIndicator">Step 1 of 4</div>
+            </div>
+        </div>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -510,7 +596,7 @@
         firebase.initializeApp(firebaseConfig);
         const dbRef = firebase.database().ref("slot_parking");
 
-        // Simulated parking data for toolbar (replace with actual API call in production)
+        // Simulated parking data for toolbar
         class ParkingSystem {
             constructor() {
                 this.parkingData = {
@@ -525,7 +611,6 @@
             }
 
             refreshOverview() {
-                // Simulate data refresh
                 this.parkingData.availableSpots = Math.floor(Math.random() * 20);
                 this.parkingData.occupiedSpots = Math.floor(Math.random() * 10);
                 this.parkingData.lastActivity = 'Vehicle ' + (Math.random() > 0.5 ? 'entered' : 'exited') + ' at ' + new Date().toLocaleTimeString();
@@ -612,6 +697,52 @@
             });
         }
 
+        // Pop-up Modal Logic
+        const helpSteps = [
+            {
+                title: "Welcome to BRIN Parking Management",
+                text: "This guide will help you navigate the website's features. Click 'Next' to learn about the main sections."
+            },
+            {
+                title: "About Us",
+                text: "This section provides information about BRIN Cisitu Bandung, a leading research hub. Click the 'For Our Location' button to view our location on Google Maps."
+            },
+            {
+                title: "Live Overview",
+                text: "View real-time parking statistics, including occupied and available slots, current time, and daily car activity."
+            },
+            {
+                title: "Form Message Parking & Park Condition",
+                text: "Use the form to log vehicle entries and exits by selecting a parking slot and adding details. The 2D parking layout shows which slots are occupied."
+            }
+        ];
+
+        let currentStep = 0;
+
+        function updateModalContent() {
+            const modalTitle = document.getElementById('modalTitle');
+            const modalText = document.getElementById('modalText');
+            const stepIndicator = document.getElementById('stepIndicator');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            modalTitle.textContent = helpSteps[currentStep].title;
+            modalText.textContent = helpSteps[currentStep].text;
+            stepIndicator.textContent = `Step ${currentStep + 1} of ${helpSteps.length}`;
+
+            prevBtn.style.display = currentStep === 0 ? 'none' : 'inline-block';
+            nextBtn.style.display = currentStep === helpSteps.length - 1 ? 'none' : 'inline-block';
+        }
+
+        function showModal() {
+            document.getElementById('helpModal').style.display = 'flex';
+            updateModalContent();
+        }
+
+        function closeModal() {
+            document.getElementById('helpModal').style.display = 'none';
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             if (!currentUser) {
@@ -665,6 +796,26 @@
                     console.log('Undo/Redo is disabled');
                 }
             });
+
+            // Pop-up Modal Event Listeners
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                if (currentStep > 0) {
+                    currentStep--;
+                    updateModalContent();
+                }
+            });
+
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                if (currentStep < helpSteps.length - 1) {
+                    currentStep++;
+                    updateModalContent();
+                }
+            });
+
+            document.getElementById('closeBtn').addEventListener('click', closeModal);
+
+            // Show modal on page load
+            showModal();
         });
     </script>
 </body>
