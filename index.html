@@ -9,12 +9,11 @@
     <title>BRIN Live Overview</title>
     <style>
         body { 
-            font-family: 'Arial', sans-serif; 
+            font-family: Arial, sans-serif; 
             margin: 0; 
             padding: 0; 
             color: darkslategrey; 
             overflow-x: hidden; 
-            background-color: #f4f7fa;
         }
         body::before { 
             content: ""; 
@@ -35,13 +34,12 @@
             height: 100%; 
             object-fit: cover; 
             z-index: -2; 
-            opacity: 0.3; 
-            filter: blur(2px);
+            opacity: 0.4; 
         }
         header { 
             background-image: linear-gradient(to right, lightseagreen, palevioletred); 
             color: white; 
-            padding: 15px 30px; 
+            padding: 10px 20px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -49,27 +47,21 @@
             width: 100%; 
             top: 0; 
             z-index: 1000; 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
         }
         .logo { 
             display: flex; 
             align-items: center; 
             cursor: pointer; 
-            transition: transform 0.3s ease; 
-        }
-        .logo:hover { 
-            transform: scale(1.05); 
         }
         .logo img { 
-            height: 50px; 
+            height: 40px; 
             vertical-align: middle; 
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)); 
         }
         .logo span { 
-            margin-left: 15px; 
-            font-size: 18px; 
+            margin-left: 10px; 
+            font-size: 16px; 
             font-weight: bold; 
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); 
         }
         .header-right { 
             display: flex; 
@@ -77,34 +69,28 @@
         }
         .header-right span { 
             margin-right: 20px; 
-            font-size: 16px; 
-            font-weight: 500; 
+            font-size: 14px; 
         }
         .main-content { 
             margin-left: 0; 
-            padding: 100px 30px 30px; 
+            padding: 80px 20px 20px; 
             min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
         }
         .main-content-grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
-            gap: 20px; 
-            max-width: 1200px; 
-            width: 100%; 
+            gap: 15px; 
             margin-bottom: 20px; 
         }
         .toolbar { 
             position: fixed; 
-            top: 70px; 
+            top: 60px; 
             left: -400px; 
-            width: 250px; 
-            height: calc(100% - 70px); 
+            width: 200px; 
+            height: 100%; 
             background-image: linear-gradient(to bottom, lightseagreen, palevioletred); 
-            padding: 20px; 
-            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.15); 
+            padding: 15px; 
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
             transition: left 0.3s ease-in-out; 
             z-index: 999; 
             overflow-y: auto; 
@@ -113,262 +99,233 @@
             left: 0; 
         }
         .toolbar .feature-box { 
-            background-color: rgba(255, 255, 255, 0.9); 
-            border-radius: 10px; 
-            padding: 15px; 
-            margin-bottom: 20px; 
-            color: darkslategrey; 
-            font-size: 14px; 
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
-            animation: slideIn 0.5s ease-in-out; 
-        }
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            background-color: lightgrey; 
+            border-radius: 8px; 
+            padding: 12px; 
+            margin-bottom: 16px; 
+            color: white; 
+            font-size: 13px; 
         }
         .toolbar .feature-box h3 { 
-            margin: 0 0 10px; 
-            font-size: 16px; 
-            color: #007bff; 
+            margin: 0 0 8px; 
+            font-size: 14px; 
+            color: black; 
         }
         .toolbar .feature-box button { 
             width: 100%; 
-            padding: 8px; 
-            background-color: #007bff; 
-            color: white; 
+            padding: 6px; 
+            background-color: darkgrey; 
+            color: black; 
             border: none; 
-            border-radius: 6px; 
+            border-radius: 5px; 
             cursor: pointer; 
-            font-size: 13px; 
-            margin-bottom: 6px; 
-            transition: background-color 0.3s, transform 0.2s; 
+            font-size: 11px; 
+            margin-bottom: 4px; 
+            transition: background-color 0.3s; 
         }
         .toolbar .feature-box button:hover { 
-            background-color: #0056b3; 
-            transform: scale(1.03); 
+            background-color: darkslategrey; 
         }
         .toolbar .user-info { 
             text-align: center; 
         }
         .toolbar .user-info img { 
-            width: 50px; 
-            height: 50px; 
+            width: 40px; 
+            height: 40px; 
             border-radius: 50%; 
-            margin-bottom: 10px; 
-            border: 2px solid #007bff; 
+            margin-bottom: 8px; 
         }
         .toolbar .user-info span { 
             display: block; 
-            margin: 6px 0; 
-            font-size: 12px; 
-            color: darkslategrey; 
+            margin: 4px 0; 
+            font-size: 11px; 
+            color: black; 
+        }
+        .toolbar .live-overview { 
+            text-align: left; 
         }
         .toolbar .live-overview .status { 
-            margin: 10px 0; 
-            font-size: 13px; 
-            color: darkslategrey; 
+            margin: 8px 0; 
+            font-size: 12px; 
+            color: black; 
         }
         .toolbar .live-overview .status span { 
             font-weight: bold; 
             color: #007bff; 
         }
-        .about-us, .overview, .user-details, .park-condition-2d { 
-            background-color: rgba(255, 255, 255, 0.95); 
-            padding: 20px; 
-            border-radius: 10px; 
-            border: 2px solid #dc3545; 
-            min-height: 200px; 
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-            animation: fadeIn 0.8s ease-in-out; 
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .about-us h1, .overview h1 { 
-            margin: 0 0 15px; 
-            color: #007bff; 
-            font-size: 18px; 
-            font-weight: bold; 
-        }
-        .about-us .content { 
-            display: flex; 
-            align-items: flex-start; 
-            gap: 15px; 
-        }
-        .about-us img { 
-            width: 120px; 
-            height: auto; 
+        .overview, .user-details, .park-condition-2d, .about-us { 
+            background-color: lightgrey; 
+            padding: 10px; 
             border-radius: 8px; 
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); 
-            transition: transform 0.3s ease; 
+            border: 2px solid #dc3545; 
+            min-height: 150px; 
         }
-        .about-us img:hover { 
-            transform: scale(1.05); 
+        .park-condition-2d {
+            padding: 15px;
         }
-        .about-us p { 
-            font-size: 13px; 
-            color: #555; 
-            margin: 0 0 15px; 
-            line-height: 1.6; 
+        .overview h1, .about-us h1 { 
+            margin: 0 0 10px; 
+            color: #007bff; 
+            font-size: 16px; 
         }
-        .about-us a button { 
-            padding: 10px 15px; 
-            background-color: #007bff; 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 13px; 
-            transition: background-color 0.3s, transform 0.2s; 
-        }
-        .about-us a button:hover { 
-            background-color: #0056b3; 
-            transform: scale(1.03); 
-        }
-        .overview .stats { 
+        .stats { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
-            gap: 12px; 
-            margin-bottom: 15px; 
-            font-size: 13px; 
+            gap: 10px; 
+            margin-bottom: 10px; 
+            font-size: 12px; 
         }
         .stats div { 
             background-color: #e9ecef; 
-            padding: 10px; 
-            border-radius: 6px; 
+            padding: 6px; 
+            border-radius: 5px; 
             text-align: center; 
-            transition: transform 0.2s; 
-        }
-        .stats div:hover { 
-            transform: scale(1.03); 
         }
         .stats span:first-child { 
             display: block; 
-            font-size: 13px; 
+            font-size: 12px; 
             font-weight: bold; 
             color: #555; 
-            margin-bottom: 6px; 
+            margin-bottom: 5px; 
         }
         .stats span:last-child { 
-            font-size: 13px; 
+            font-size: 12px; 
             color: #007bff; 
+        }
+        .about-us .content { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            font-family: 'Times New Roman', Times, serif; 
+            background-color: #f5f5f5; 
+            padding: 15px; 
+            border: 1px solid #000; 
+            border-radius: 4px; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+        }
+        .about-us img { 
+            width: 100%; 
+            max-width: 200px; 
+            height: auto; 
+            border: 2px solid #000; 
+            border-radius: 4px; 
+            margin: 0 auto; 
+            display: block; 
+        }
+        .about-us p { 
+            font-size: 14px; 
+            color: #000; 
+            margin: 0 0 10px; 
+            line-height: 1.5; 
+            text-align: justify; 
+            column-count: 2; 
+            column-gap: 20px; 
+            column-rule: 1px solid #ccc; 
+        }
+        .about-us a button { 
+            padding: 8px 12px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 12px; 
+            transition: background-color 0.3s; 
+            display: block; 
+            margin: 0 auto; 
+        }
+        .about-us a button:hover { 
+            background-color: #0056b3; 
         }
         .user-details h2 { 
             margin-top: 0; 
             color: #007bff; 
-            font-size: 18px; 
-            font-weight: bold; 
+            font-size: 16px; 
         }
         .user-details .detail { 
-            margin-bottom: 12px; 
+            margin-bottom: 10px; 
             font-size: 14px; 
         }
         .user-details .detail label { 
             font-weight: bold; 
             display: block; 
             color: #555; 
-            margin-bottom: 5px; 
         }
         .user-details .detail input, .user-details .detail select, .user-details .detail textarea {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ccc;
-            border-radius: 6px;
+            border-radius: 5px;
             font-size: 14px;
             box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-        .user-details .detail input:focus, .user-details .detail select:focus, .user-details .detail textarea:focus {
-            border-color: #007bff;
-            outline: none;
         }
         .user-details .actions { 
             display: flex; 
             justify-content: space-between; 
-            margin-top: 20px; 
+            margin-top: 15px; 
         }
         .user-details .actions button { 
-            padding: 10px 15px; 
+            padding: 8px 12px; 
             border: none; 
-            border-radius: 6px; 
+            border-radius: 5px; 
             cursor: pointer; 
-            font-size: 13px; 
-            transition: background-color 0.3s, transform 0.2s; 
+            font-size: 12px; 
+            transition: background-color 0.3s; 
         }
         .user-details .actions .in-btn { 
-            background-color: #28a745; 
+            background-color: green; 
             color: white; 
         }
         .user-details .actions .in-btn:hover { 
-            background-color: #218838; 
-            transform: scale(1.03); 
+            background-color: darkgreen; 
         }
         .user-details .actions .out-btn { 
-            background-color: #dc3545; 
+            background-color: red; 
             color: white; 
         }
         .user-details .actions .out-btn:hover { 
-            background-color: #c82333; 
-            transform: scale(1.03); 
-        }
-        .park-condition-2d {
-            padding: 20px;
-        }
-        .park-condition-2d h2 {
-            color: #007bff;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
+            background-color: darkred; 
         }
         .parking-lot {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             padding: 10px;
         }
         .row {
             display: flex;
             flex-direction: row-reverse;
-            gap: 12px;
+            gap: 10px;
             justify-content: flex-start;
         }
         .slot {
             border: 1px solid #ccc;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             background-color: #e9ecef;
-            font-size: 13px;
-            border-radius: 6px;
+            font-size: 12px;
+            border-radius: 5px;
             position: relative;
-            width: 60px;
-            height: 35px;
+            width: 50px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            animation: slotFadeIn 0.5s ease-in-out;
-        }
-        @keyframes slotFadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .slot:hover {
-            transform: scale(1.05);
+            transition: background-color 0.3s;
         }
         .slot.occupied {
-            background-color: #ffc107;
+            background-color: yellow;
         }
         .slot span {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
         }
         .slot .car {
-            width: 40px;
-            height: 20px;
-            background-color: #dc3545;
-            border-radius: 4px;
+            width: 30px;
+            height: 15px;
+            background-color: red;
+            border-radius: 3px;
             position: absolute;
             left: 50%;
             top: 50%;
@@ -450,10 +407,8 @@
                 <h1>About Us</h1>
                 <div class="content">
                     <img src="https://github.com/Defdava/Digital-Twin-Website-used/blob/main/Logo_BRIN.png?raw=true" alt="BRIN Logo">
-                    <div>
-                        <p>BRIN Cisitu Bandung merupakan salah satu kawasan riset milik Badan Riset dan Inovasi Nasional yang berlokasi di Kawasan Sains dan Teknologi Samaun Samadikun, Jalan Sangkuriang, Dago, Kecamatan Coblong, Bandung. Kawasan ini menjadi pusat berbagai kegiatan penelitian dan inovasi, termasuk pengembangan kecerdasan artifisial, keamanan siber, dan teknologi telekomunikasi. Di sini, para peneliti, mahasiswa, dan praktisi dari berbagai institusi berkolaborasi dalam proyek-proyek unggulan seperti digitalisasi naskah kuno berbasis machine learning serta pengembangan solusi teknologi untuk kebutuhan industri dan masyarakat. Fasilitas yang memadai serta lingkungan yang kondusif menjadikan BRIN Cisitu Bandung sebagai salah satu pusat inovasi dan pengembangan ilmu pengetahuan terkemuka di Indonesia.</p>
-                        <a href="https://share.google/SvuFGBZcGBeEERAHt" target="_blank"><button>For Our Location</button></a>
-                    </div>
+                    <p>BRIN Cisitu Bandung merupakan salah satu kawasan riset milik Badan Riset dan Inovasi Nasional yang berlokasi di Kawasan Sains dan Teknologi Samaun Samadikun, Jalan Sangkuriang, Dago, Kecamatan Coblong, Bandung. Kawasan ini menjadi pusat berbagai kegiatan penelitian dan inovasi, termasuk pengembangan kecerdasan artifisial, keamanan siber, dan teknologi telekomunikasi. Di sini, para peneliti, mahasiswa, dan praktisi dari berbagai institusi berkolaborasi dalam proyek-proyek unggulan seperti digitalisasi naskah kuno berbasis machine learning serta pengembangan solusi teknologi untuk kebutuhan industri dan masyarakat. Fasilitas yang memadai serta lingkungan yang kondusif menjadikan BRIN Cisitu Bandung sebagai salah satu pusat inovasi dan pengembangan ilmu pengetahuan terkemuka di Indonesia.</p>
+                    <a href="https://share.google/SvuFGBZcGBeEERAHt" target="_blank"><button>For Our Location</button></a>
                 </div>
             </div>
             <div class="overview">
