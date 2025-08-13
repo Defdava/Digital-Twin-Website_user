@@ -242,15 +242,16 @@
             background-color: darkred; 
         }
         .parking-lot {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 10px;
-        }
-        .column {
             display: flex;
             flex-direction: column;
+            gap: 15px;
+            padding: 10px;
+        }
+        .row {
+            display: flex;
+            flex-direction: row;
             gap: 10px;
+            justify-content: flex-start;
         }
         .slot {
             border: 1px solid #ccc;
@@ -260,7 +261,8 @@
             font-size: 12px;
             border-radius: 5px;
             position: relative;
-            height: 40px;
+            width: 50px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -279,7 +281,6 @@
             height: 15px;
             background-color: red;
             border-radius: 3px;
-            margin-top: 5px;
             position: absolute;
             left: 50%;
             top: 50%;
@@ -409,7 +410,18 @@
             <div class="park-condition-2d">
                 <h2>Park Condition (2D)</h2>
                 <div class="parking-lot">
-                    <div class="column">
+                    <div class="row">
+                        <div class="slot" data-slot="12"><span>12</span><div class="car"></div></div>
+                        <div class="slot" data-slot="13"><span>13</span><div class="car"></div></div>
+                        <div class="slot" data-slot="14"><span>14</span><div class="car"></div></div>
+                        <div class="slot" data-slot="15"><span>15</span><div class="car"></div></div>
+                        <div class="slot" data-slot="16"><span>16</span><div class="car"></div></div>
+                        <div class="slot" data-slot="17"><span>17</span><div class="car"></div></div>
+                        <div class="slot" data-slot="18"><span>18</span><div class="car"></div></div>
+                        <div class="slot" data-slot="19"><span>19</span><div class="car"></div></div>
+                        <div class="slot" data-slot="20"><span>20</span><div class="car"></div></div>
+                    </div>
+                    <div class="row">
                         <div class="slot" data-slot="1"><span>1</span><div class="car"></div></div>
                         <div class="slot" data-slot="2"><span>2</span><div class="car"></div></div>
                         <div class="slot" data-slot="3"><span>3</span><div class="car"></div></div>
@@ -421,17 +433,6 @@
                         <div class="slot" data-slot="9"><span>9</span><div class="car"></div></div>
                         <div class="slot" data-slot="10"><span>10</span><div class="car"></div></div>
                         <div class="slot" data-slot="11"><span>11</span><div class="car"></div></div>
-                    </div>
-                    <div class="column">
-                        <div class="slot" data-slot="12"><span>12</span><div class="car"></div></div>
-                        <div class="slot" data-slot="13"><span>13</span><div class="car"></div></div>
-                        <div class="slot" data-slot="14"><span>14</span><div class="car"></div></div>
-                        <div class="slot" data-slot="15"><span>15</span><div class="car"></div></div>
-                        <div class="slot" data-slot="16"><span>16</span><div class="car"></div></div>
-                        <div class="slot" data-slot="17"><span>17</span><div class="car"></div></div>
-                        <div class="slot" data-slot="18"><span>18</span><div class="car"></div></div>
-                        <div class="slot" data-slot="19"><span>19</span><div class="car"></div></div>
-                        <div class="slot" data-slot="20"><span>20</span><div class="car"></div></div>
                     </div>
                 </div>
             </div>
@@ -493,11 +494,6 @@
             updateOverviewDisplay();
         }
 
-        function updateLiveOverview(occupiedCount, emptyCount, totalSlots) {
-            document.getElementById('occupiedSlots').textContent = `${occupiedCount} / ${totalSlots}`;
-            document.getElementById('emptySlots').textContent = `${emptyCount} / ${totalSlots}`;
-        }
-
         function updateParkingLot(data) {
             const totalSlots = 20;
             let occupiedCount = 0;
@@ -518,6 +514,11 @@
             }
             const emptyCount = totalSlots - occupiedCount;
             updateLiveOverview(occupiedCount, emptyCount, totalSlots);
+        }
+
+        function updateLiveOverview(occupiedCount, emptyCount, totalSlots) {
+            document.getElementById('occupiedSlots').textContent = `${occupiedCount} / ${totalSlots}`;
+            document.getElementById('emptySlots').textContent = `${emptyCount} / ${totalSlots}`;
         }
 
         function setupFirebaseListener() {
