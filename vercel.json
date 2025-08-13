@@ -14,6 +14,7 @@
     { "src": "/live-overview", "dest": "/index.html" },
     { "src": "/previous-analysis", "dest": "/previous-analysis.html" },
     { "src": "/profile", "dest": "/profile.html" },
+    { "src": "/aboutus", "dest": "/aboutus.html" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/login.html" }
   ]
