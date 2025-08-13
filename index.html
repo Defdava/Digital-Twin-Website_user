@@ -539,6 +539,10 @@
                     <input type="text" id="detailPlate" readonly>
                 </div>
                 <div class="detail">
+                    <label for="parkingDate">Tanggal:</label>
+                    <input type="text" id="parkingDate" readonly>
+                </div>
+                <div class="detail">
                     <label for="contactNumber">Nomor Kontak:</label>
                     <input type="tel" id="contactNumber" placeholder="Masukkan nomor kontak">
                 </div>
@@ -703,9 +707,8 @@
             }
             const timestamp = new Date();
             const optionsTime = { timeZone: 'Asia/Jakarta', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false };
-            const optionsDate = { timeZone: 'Asia/Jakarta', day: '2-digit', month: '2-digit', year: 'numeric' };
             const timeString = new Intl.DateTimeFormat('en-US', optionsTime).format(timestamp) + ' WIB';
-            const dateString = new Intl.DateTimeFormat('en-GB', optionsDate).format(timestamp).split('/').join('-');
+            const dateString = document.getElementById('parkingDate').value || 'None';
             const contactNumber = document.getElementById('contactNumber').value || 'None';
             const parkingNotes = document.getElementById('parkingNotes').value || 'None';
 
@@ -744,7 +747,7 @@
             {
                 element: '.user-details',
                 title: "Form Message Parking",
-                text: "Gunakan form ini untuk mengisi data parkir pengguna, seperti nama, ID karyawan, plat nomor, nomor kontak, dan catatan parkir. Pilih slot parkir dan klik 'Mobil Masuk' atau 'Mobil Keluar'.",
+                text: "Gunakan form ini untuk mengisi data parkir pengguna, seperti nama, ID karyawan, plat nomor, tanggal, nomor kontak, dan catatan parkir. Pilih slot parkir dan klik 'Mobil Masuk' atau 'Mobil Keluar'.",
                 position: 'right'
             },
             {
@@ -822,6 +825,12 @@
             document.getElementById('detailName').value = currentUser.username;
             document.getElementById('detailIdWorker').value = currentUser.idWorker;
             document.getElementById('detailPlate').value = currentUser.plateNumber || 'None';
+
+            // Set default date to current date (13-08-2025)
+            const today = new Date('2025-08-13T11:17:00+07:00');
+            const optionsDate = { timeZone: 'Asia/Jakarta', day: '2-digit', month: '2-digit', year: 'numeric' };
+            const dateString = new Intl.DateTimeFormat('en-GB', optionsDate).format(today).split('/').join('-');
+            document.getElementById('parkingDate').value = dateString;
 
             document.querySelector('.logout').addEventListener('click', () => {
                 localStorage.removeItem('currentUser');
