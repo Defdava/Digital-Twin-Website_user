@@ -206,13 +206,20 @@
             color: #555;
         }
 
-        .profile-container .detail span {
-            color: #007bff;
+        .profile-container .detail input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
         }
 
         .profile-container input[type="text"],
         .profile-container input[type="password"],
-        .profile-container input[type="file"] {
+        .profile-container input[type="file"],
+        .profile-container input[type="email"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -301,12 +308,12 @@
             <h2>Profile Settings</h2>
             <img id="previewPic" src="/assets/user.JPG" alt="Profile Picture">
             <div class="detail">
-                <label>Nama:</label>
-                <input type="text" id="detailName" placeholder="Nama">
+                <label>Username:</label>
+                <input type="text" id="username" placeholder="Username">
             </div>
             <div class="detail">
                 <label>Email:</label>
-                <span id="detailEmail"></span>
+                <input type="email" id="email" placeholder="Email">
             </div>
             <div class="detail">
                 <label>ID Karyawan:</label>
@@ -317,7 +324,6 @@
                 <input type="text" id="plateNumber" placeholder="Plat Nomor Mobil">
             </div>
             <input type="file" id="profilePicture" accept="image/*">
-            <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="New Password">
             <input type="password" id="confirmPassword" placeholder="Confirm New Password">
             <button id="saveProfile">Save Changes</button>
@@ -343,14 +349,21 @@
                 this.users = JSON.parse(localStorage.getItem('users')) || [];
             }
 
-            updateUser(email, updatedData) {
-                const userIndex = this.users.findIndex(user => user.email === email);
-                if (userIndex !== -1) {
-                    this.users[userIndex] = { ...this.users[userIndex], ...updatedData };
-                    localStorage.setItem('users', JSON.stringify(this.users));
-                    return this.users[userIndex];
+            updateUser(oldEmail, updatedData) {
+                const userIndex = this.users.findIndex(user => user.email === oldEmail);
+                if (userIndex === -1) {
+                    throw new Error('User not found!');
                 }
-                throw new Error('User not found!');
+                // Check for duplicate email
+                if (updatedData.email && updatedData.email !== oldEmail) {
+                    const emailExists = this.users.some(user => user.email === updatedData.email);
+                    if (emailExists) {
+                        throw new Error('Email is already in use!');
+                    }
+                }
+                this.users[userIndex] = { ...this.users[userIndex], ...updatedData };
+                localStorage.setItem('users', JSON.stringify(this.users));
+                return this.users[userIndex];
             }
         }
 
@@ -401,13 +414,12 @@
             const profilePic = document.getElementById('profilePic');
             const previewPic = document.getElementById('previewPic');
             const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
             const confirmPasswordInput = document.getElementById('confirmPassword');
             const profilePictureInput = document.getElementById('profilePicture');
             const plateNumberInput = document.getElementById('plateNumber');
             const idWorkerInput = document.getElementById('idWorker');
-            const detailNameInput = document.getElementById('detailName');
-            const detailEmail = document.getElementById('detailEmail');
             const saveProfileBtn = document.getElementById('saveProfile');
             const errorMessage = document.getElementById('error-message');
             const successMessage = document.getElementById('success-message');
@@ -421,10 +433,9 @@
                 profilePic.src = currentUser.profilePic || '/assets/user.JPG';
                 previewPic.src = currentUser.profilePic || '/assets/user.JPG';
                 usernameInput.value = currentUser.username;
-                detailNameInput.value = currentUser.username;
+                emailInput.value = currentUser.email;
                 idWorkerInput.value = currentUser.idWorker;
                 plateNumberInput.value = currentUser.plateNumber || '';
-                detailEmail.textContent = currentUser.email;
             }
 
             // Initialize Live Overview
@@ -459,7 +470,7 @@
             // Save Profile Changes
             saveProfileBtn.addEventListener('click', () => {
                 const newUsername = usernameInput.value.trim();
-                const newDetailName = detailNameInput.value.trim();
+                const newEmail = emailInput.value.trim();
                 const newIdWorker = idWorkerInput.value.trim();
                 const newPlateNumber = plateNumberInput.value.trim();
                 const newPassword = passwordInput.value;
@@ -469,8 +480,15 @@
                 errorMessage.style.display = 'none';
                 successMessage.style.display = 'none';
 
-                if (!newUsername || !newDetailName || !newIdWorker) {
-                    errorMessage.textContent = 'Username, Name, and Employee ID cannot be empty!';
+                // Validate inputs
+                if (!newUsername || !newEmail || !newIdWorker) {
+                    errorMessage.textContent = 'Username, Email, and Employee ID cannot be empty!';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+                    errorMessage.textContent = 'Please enter a valid email address!';
                     errorMessage.style.display = 'block';
                     return;
                 }
@@ -484,6 +502,7 @@
                 try {
                     let updatedData = { 
                         username: newUsername,
+                        email: newEmail,
                         idWorker: newIdWorker,
                         plateNumber: newPlateNumber
                     };
@@ -499,7 +518,8 @@
                             userName.textContent = updatedUser.username;
                             profilePic.src = updatedUser.profilePic;
                             previewPic.src = updatedUser.profilePic;
-                            detailNameInput.value = updatedUser.username;
+                            usernameInput.value = updatedUser.username;
+                            emailInput.value = updatedUser.email;
                             idWorkerInput.value = updatedUser.idWorker;
                             plateNumberInput.value = updatedUser.plateNumber;
                             successMessage.textContent = 'Profile updated successfully!';
@@ -512,7 +532,8 @@
                         userName.textContent = updatedUser.username;
                         profilePic.src = updatedUser.profilePic || '/assets/user.JPG';
                         previewPic.src = updatedUser.profilePic || '/assets/user.JPG';
-                        detailNameInput.value = updatedUser.username;
+                        usernameInput.value = updatedUser.username;
+                        emailInput.value = updatedUser.email;
                         idWorkerInput.value = updatedUser.idWorker;
                         plateNumberInput.value = updatedUser.plateNumber;
                         successMessage.textContent = 'Profile updated successfully!';
