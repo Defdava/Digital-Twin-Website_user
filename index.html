@@ -540,7 +540,7 @@
                 </div>
                 <div class="detail">
                     <label for="parkingDate">Tanggal:</label>
-                    <input type="text" id="parkingDate" readonly>
+                    <input type="date" id="parkingDate">
                 </div>
                 <div class="detail">
                     <label for="contactNumber">Nomor Kontak:</label>
@@ -708,7 +708,8 @@
             const timestamp = new Date();
             const optionsTime = { timeZone: 'Asia/Jakarta', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false };
             const timeString = new Intl.DateTimeFormat('en-US', optionsTime).format(timestamp) + ' WIB';
-            const dateString = document.getElementById('parkingDate').value || 'None';
+            const dateInput = document.getElementById('parkingDate').value;
+            const dateString = dateInput ? dateInput : 'None';
             const contactNumber = document.getElementById('contactNumber').value || 'None';
             const parkingNotes = document.getElementById('parkingNotes').value || 'None';
 
@@ -828,8 +829,7 @@
 
             // Set default date to current date (13-08-2025)
             const today = new Date('2025-08-13T11:53:00+07:00');
-            const optionsDate = { timeZone: 'Asia/Jakarta', day: '2-digit', month: '2-digit', year: 'numeric' };
-            const dateString = new Intl.DateTimeFormat('en-GB', optionsDate).format(today).split('/').join('-');
+            const dateString = today.toISOString().split('T')[0];
             document.getElementById('parkingDate').value = dateString;
 
             document.querySelector('.logout').addEventListener('click', () => {
