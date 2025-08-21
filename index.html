@@ -360,7 +360,6 @@
         .slot.occupied.exiting .car {
             animation: carExit 0.5s ease-in-out forwards;
         }
-        /* Guided Tour Pop-up Styles */
         .tour-overlay {
             display: none;
             position: fixed;
@@ -596,9 +595,7 @@
                 </div>
             </div>
         </div>
-        <!-- Guided Tour Overlay -->
         <div class="tour-overlay" id="tourOverlay"></div>
-        <!-- Guided Tour Tooltip -->
         <div class="tour-tooltip" id="tourTooltip" style="display: none;">
             <h3 id="tooltipTitle"></h3>
             <p id="tooltipText"></p>
@@ -608,7 +605,6 @@
             </div>
         </div>
     </main>
-
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script>
@@ -630,13 +626,10 @@
         function updateParkingLot(data) {
             const totalSlots = 20;
             let occupiedCount = 0;
-
-            // Iterate through slots 1 to 20
             for (let i = 1; i <= totalSlots; i++) {
                 const slotKey = `slot_${i}`;
                 const slotEl = document.querySelector(`.slot[data-slot="${i}"]`);
-                const isOccupied = data[slotKey] === true; // Check if slot is occupied (true)
-
+                const isOccupied = data[slotKey]?.occupied === true;
                 if (slotEl) {
                     if (isOccupied) {
                         slotEl.classList.add("occupied");
@@ -648,20 +641,16 @@
                     }
                 }
             }
-
             const emptyCount = totalSlots - occupiedCount;
             updateLiveOverview(occupiedCount, emptyCount, totalSlots);
+            document.getElementById('availableSpots').textContent = emptyCount;
+            document.getElementById('occupiedSpots').textContent = occupiedCount;
+            document.getElementById('lastActivity').textContent = data.lastActivity || 'None';
         }
 
         function updateLiveOverview(occupiedCount, emptyCount, totalSlots) {
-            // Update Live Overview section in main content
             document.getElementById('occupiedSlots').textContent = `${occupiedCount} / ${totalSlots}`;
             document.getElementById('emptySlots').textContent = `${emptyCount} / ${totalSlots}`;
-
-            // Update Live Overview in toolbar
-            document.getElementById('availableSpots').textContent = emptyCount;
-            document.getElementById('occupiedSpots').textContent = occupiedCount;
-            document.getElementById('lastActivity').textContent = 'Updated at ' + new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Jakarta', hour12: false });
         }
 
         function setupFirebaseListener() {
@@ -687,7 +676,10 @@
             const contactNumber = document.getElementById('contactNumber').value || 'None';
             const parkingNotes = document.getElementById('parkingNotes').value || 'None';
 
-            firebase.database().ref(`slot_message_user/${slotKey}`).set({
+            const updates = {};
+            updates[`slot_parking/${slotKey}/occupied`] = action === 'Mobil Masuk';
+            updates[`slot_parking/lastActivity`] = `${action} at ${timeString}`;
+            updates[`slot_message_user/${slotKey}`] = {
                 lastAction: action,
                 user: user.username,
                 idWorker: user.idWorker,
@@ -696,16 +688,22 @@
                 parkingNotes: parkingNotes,
                 date: dateString,
                 timestamp: timeString
-            }).then(() => {
+            };
+
+            firebase.database().ref().update(updates).then(() => {
                 alert(`✅ ${action} untuk ${slotKey} berhasil dikirim!`);
                 document.getElementById('contactNumber').value = '';
                 document.getElementById('parkingNotes').value = '';
             }).catch(err => {
                 console.error('❌ Gagal mengirim pesan:', err);
+                alert('Gagal mengirim pesan. Silakan coba lagi.');
             });
         }
 
-        // Guided Tour Logic
+        function refreshOverview() {
+            setupFirebaseListener();
+        }
+
         const tourSteps = [
             {
                 element: '.about-us',
@@ -788,10 +786,6 @@
             document.getElementById('tourTooltip').style.display = 'none';
         }
 
-        function refreshOverview() {
-            setupFirebaseListener();
-        }
-
         document.addEventListener("DOMContentLoaded", () => {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             if (!currentUser) {
@@ -805,8 +799,7 @@
             document.getElementById('detailIdWorker').value = currentUser.idWorker;
             document.getElementById('detailPlate').value = currentUser.plateNumber || 'None';
 
-            // Set default date to current date
-            const today = new Date();
+            const today = new Date('2025-08-13T11:53:00+07:00');
             const dateString = today.toISOString().split('T')[0];
             document.getElementById('parkingDate').value = dateString;
 
@@ -828,7 +821,6 @@
             updateClock();
             setInterval(updateClock, 1000);
 
-            // Initialize Firebase listener
             setupFirebaseListener();
 
             document.querySelector('.in-btn').addEventListener('click', () => {
@@ -841,7 +833,6 @@
                 sendSlotMessage(selectedSlot, 'Mobil Keluar', currentUser);
             });
 
-            // Prevent Undo/Redo
             document.addEventListener('keydown', (event) => {
                 if ((event.ctrlKey || event.metaKey) && (event.key === 'z' || event.key === 'y' || event.key === 'Z' || event.key === 'Y')) {
                     event.preventDefault();
@@ -850,7 +841,6 @@
                 }
             });
 
-            // Guided Tour Event Listeners
             document.getElementById('tourNextBtn').addEventListener('click', () => {
                 currentTourStep++;
                 if (currentTourStep < tourSteps.length) {
@@ -862,7 +852,6 @@
 
             document.getElementById('tourCloseBtn').addEventListener('click', endTour);
 
-            // Start the tour on page load
             startTour();
         });
     </script>
