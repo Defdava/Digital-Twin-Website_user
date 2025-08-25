@@ -104,7 +104,6 @@
             border-radius: 8px; 
             padding: 12px; 
             margin-bottom: 16px; 
-            color: white; 
             font-size: 13px; 
         }
         .toolbar .feature-box h3 { 
@@ -126,6 +125,7 @@
         }
         .toolbar .feature-box button:hover { 
             background-color: darkslategrey; 
+            color: white; 
         }
         .toolbar .user-info { 
             text-align: center; 
@@ -162,7 +162,8 @@
             min-height: 150px; 
         }
         .park-condition-2d {
-            padding: 15px;
+            padding: 5px;
+            min-height: 200px;
         }
         .overview h1, .about-us h1 { 
             margin: 0 0 10px; 
@@ -290,25 +291,34 @@
         .parking-lot {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            padding: 10px;
+            gap: 0.5px;
+            padding: 3px;
+            margin-top: 50px;
+            justify-content: center;
+            align-items: center;
         }
-        .row {
+        .column.top {
             display: flex;
-            flex-direction: row-reverse;
-            gap: 10px;
-            justify-content: flex-start;
+            flex-direction: row;
+            gap: 5px;
+            justify-content: center;
+        }
+        .column.bottom {
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            justify-content: center;
         }
         .slot {
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 5px;
             text-align: center;
             background-color: #e9ecef;
-            font-size: 12px;
+            font-size: 16px;
             border-radius: 5px;
             position: relative;
             width: 50px;
-            height: 30px;
+            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -319,13 +329,12 @@
             background-color: yellow;
         }
         .slot span {
-            font-size: 12px;
+            font-size: 16px;
             font-weight: bold;
         }
         .slot .car {
-            width: 30px;
-            height: 15px;
-            background-color: red;
+            width: 40px;
+            height: 21px;
             border-radius: 3px;
             position: absolute;
             left: 50%;
@@ -569,29 +578,29 @@
             <div class="park-condition-2d">
                 <h2>Park Condition (2D)</h2>
                 <div class="parking-lot">
-                    <div class="row">
-                        <div class="slot" data-slot="12"><span>12</span><div class="car"></div></div>
-                        <div class="slot" data-slot="13"><span>13</span><div class="car"></div></div>
-                        <div class="slot" data-slot="14"><span>14</span><div class="car"></div></div>
-                        <div class="slot" data-slot="15"><span>15</span><div class="car"></div></div>
-                        <div class="slot" data-slot="16"><span>16</span><div class="car"></div></div>
-                        <div class="slot" data-slot="17"><span>17</span><div class="car"></div></div>
-                        <div class="slot" data-slot="18"><span>18</span><div class="car"></div></div>
-                        <div class="slot" data-slot="19"><span>19</span><div class="car"></div></div>
+                    <div class="column top">
                         <div class="slot" data-slot="20"><span>20</span><div class="car"></div></div>
+                        <div class="slot" data-slot="19"><span>19</span><div class="car"></div></div>
+                        <div class="slot" data-slot="18"><span>18</span><div class="car"></div></div>
+                        <div class="slot" data-slot="17"><span>17</span><div class="car"></div></div>
+                        <div class="slot" data-slot="16"><span>16</span><div class="car"></div></div>
+                        <div class="slot" data-slot="15"><span>15</span><div class="car"></div></div>
+                        <div class="slot" data-slot="14"><span>14</span><div class="car"></div></div>
+                        <div class="slot" data-slot="13"><span>13</span><div class="car"></div></div>
+                        <div class="slot" data-slot="12"><span>12</span><div class="car"></div></div>
                     </div>
-                    <div class="row">
-                        <div class="slot" data-slot="1"><span>1</span><div class="car"></div></div>
-                        <div class="slot" data-slot="2"><span>2</span><div class="car"></div></div>
-                        <div class="slot" data-slot="3"><span>3</span><div class="car"></div></div>
-                        <div class="slot" data-slot="4"><span>4</span><div class="car"></div></div>
-                        <div class="slot" data-slot="5"><span>5</span><div class="car"></div></div>
-                        <div class="slot" data-slot="6"><span>6</span><div class="car"></div></div>
-                        <div class="slot" data-slot="7"><span>7</span><div class="car"></div></div>
-                        <div class="slot" data-slot="8"><span>8</span><div class="car"></div></div>
-                        <div class="slot" data-slot="9"><span>9</span><div class="car"></div></div>
-                        <div class="slot" data-slot="10"><span>10</span><div class="car"></div></div>
+                    <div class="column bottom">
                         <div class="slot" data-slot="11"><span>11</span><div class="car"></div></div>
+                        <div class="slot" data-slot="10"><span>10</span><div class="car"></div></div>
+                        <div class="slot" data-slot="9"><span>9</span><div class="car"></div></div>
+                        <div class="slot" data-slot="8"><span>8</span><div class="car"></div></div>
+                        <div class="slot" data-slot="7"><span>7</span><div class="car"></div></div>
+                        <div class="slot" data-slot="6"><span>6</span><div class="car"></div></div>
+                        <div class="slot" data-slot="5"><span>5</span><div class="car"></div></div>
+                        <div class="slot" data-slot="4"><span>4</span><div class="car"></div></div>
+                        <div class="slot" data-slot="3"><span>3</span><div class="car"></div></div>
+                        <div class="slot" data-slot="2"><span>2</span><div class="car"></div></div>
+                        <div class="slot" data-slot="1"><span>1</span><div class="car"></div></div>
                     </div>
                 </div>
             </div>
@@ -623,25 +632,59 @@
 
         firebase.initializeApp(firebaseConfig);
         const dbRef = firebase.database().ref("slot_parking");
+        let slotSizes = {};
 
+        // Show Error Message
+        function showError(message) {
+            const errorElement = document.createElement('div');
+            errorElement.id = 'error-message';
+            errorElement.style.position = 'fixed';
+            errorElement.style.top = '10px';
+            errorElement.style.left = '50%';
+            errorElement.style.transform = 'translateX(-50%)';
+            errorElement.style.background = 'rgba(255, 0, 0, 0.8)';
+            errorElement.style.color = 'white';
+            errorElement.style.padding = '8px';
+            errorElement.style.borderRadius = '4px';
+            errorElement.style.fontSize = '12px';
+            errorElement.style.zIndex = '1001';
+            errorElement.textContent = message;
+            document.body.appendChild(errorElement);
+            setTimeout(() => {
+                errorElement.remove();
+            }, 5000);
+        }
+
+        // Update Parking Lot
         function updateParkingLot(data) {
             const totalSlots = 20;
             let occupiedCount = 0;
+
             for (let i = 1; i <= totalSlots; i++) {
                 const slotKey = `slot_${i}`;
                 const slotEl = document.querySelector(`.slot[data-slot="${i}"]`);
                 const isOccupied = data[slotKey]?.occupied === true;
+                const size = data[slotKey]?.size ? data[slotKey].size.toLowerCase() : 'none';
+                slotSizes[slotKey] = size;
+
                 if (slotEl) {
                     if (isOccupied) {
                         slotEl.classList.add("occupied");
                         slotEl.querySelector(".car").style.display = "block";
+                        slotEl.querySelector(".car").style.backgroundColor = 
+                            size === 'small' ? "#0000FF" :
+                            size === 'medium' ? "#FFA500" :
+                            size === 'big' ? "#FF0000" :
+                            "#808080";
                         occupiedCount++;
                     } else {
                         slotEl.classList.remove("occupied");
                         slotEl.querySelector(".car").style.display = "none";
+                        slotEl.querySelector(".car").style.backgroundColor = "#808080";
                     }
                 }
             }
+
             const emptyCount = totalSlots - occupiedCount;
             updateLiveOverview(occupiedCount, emptyCount, totalSlots);
             document.getElementById('availableSpots').textContent = emptyCount;
@@ -649,26 +692,30 @@
             document.getElementById('lastActivity').textContent = data.lastActivity || 'None';
         }
 
+        // Update Live Overview
         function updateLiveOverview(occupiedCount, emptyCount, totalSlots) {
             document.getElementById('occupiedSlots').textContent = `${occupiedCount} / ${totalSlots}`;
             document.getElementById('emptySlots').textContent = `${emptyCount} / ${totalSlots}`;
         }
 
+        // Setup Firebase Listener
         function setupFirebaseListener() {
             dbRef.on("value", (snapshot) => {
                 const data = snapshot.val() || {};
                 updateParkingLot(data);
             }, (error) => {
                 console.error("❌ Firebase read error:", error);
-                alert("Failed to fetch parking data. Please try again.");
+                showError("Failed to fetch parking data. Please try again.");
             });
         }
 
+        // Send Slot Message
         function sendSlotMessage(slotKey, action, user) {
             if (!slotKey) {
-                alert('Pilih slot parkir terlebih dahulu!');
+                showError('Pilih slot parkir terlebih dahulu!');
                 return;
             }
+
             const timestamp = new Date();
             const optionsTime = { timeZone: 'Asia/Jakarta', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false };
             const timeString = new Intl.DateTimeFormat('en-US', optionsTime).format(timestamp) + ' WIB';
@@ -676,9 +723,11 @@
             const dateString = dateInput ? dateInput : 'None';
             const contactNumber = document.getElementById('contactNumber').value || 'None';
             const parkingNotes = document.getElementById('parkingNotes').value || 'None';
+            const size = slotSizes[slotKey] || 'none';
 
             const updates = {};
             updates[`slot_parking/${slotKey}/occupied`] = action === 'Mobil Masuk';
+            updates[`slot_parking/${slotKey}/size`] = size;
             updates[`slot_parking/lastActivity`] = `${action} at ${timeString}`;
             updates[`slot_message_user/${slotKey}`] = {
                 lastAction: action,
@@ -688,23 +737,26 @@
                 contactNumber: contactNumber,
                 parkingNotes: parkingNotes,
                 date: dateString,
-                timestamp: timeString
+                timestamp: timeString,
+                size: size
             };
 
             firebase.database().ref().update(updates).then(() => {
-                alert(`✅ ${action} untuk ${slotKey} berhasil dikirim!`);
+                showError(`✅ ${action} untuk ${slotKey} berhasil dikirim!`);
                 document.getElementById('contactNumber').value = '';
                 document.getElementById('parkingNotes').value = '';
             }).catch(err => {
                 console.error('❌ Gagal mengirim pesan:', err);
-                alert('Gagal mengirim pesan. Silakan coba lagi.');
+                showError('Gagal mengirim pesan. Silakan coba lagi.');
             });
         }
 
+        // Refresh Overview
         function refreshOverview() {
             setupFirebaseListener();
         }
 
+        // Tour Steps Configuration
         const tourSteps = [
             {
                 element: '.about-us',
@@ -727,7 +779,7 @@
             {
                 element: '.park-condition-2d',
                 title: "Park Condition 2D",
-                text: "Tampilan 2D ini menunjukkan status slot parkir. Slot kuning berarti ditempati, dan perubahan dari form akan tercermin di sini.",
+                text: "Tampilan 2D ini menunjukkan status slot parkir. Slot kuning berarti ditempati, dengan warna mobil biru (kecil), kuning (sedang), merah (besar), atau abu-abu (kosong).",
                 position: 'left'
             }
         ];
@@ -785,9 +837,11 @@
         function endTour() {
             document.getElementById('tourOverlay').style.display = 'none';
             document.getElementById('tourTooltip').style.display = 'none';
+            currentTourStep = 0;
         }
 
         document.addEventListener("DOMContentLoaded", () => {
+            // Authentication
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             if (!currentUser) {
                 alert('Silakan login terlebih dahulu!');
@@ -800,20 +854,23 @@
             document.getElementById('detailIdWorker').value = currentUser.idWorker;
             document.getElementById('detailPlate').value = currentUser.plateNumber || 'None';
 
-            const today = new Date('2025-08-13T11:53:00+07:00');
+            const today = new Date();
             const dateString = today.toISOString().split('T')[0];
             document.getElementById('parkingDate').value = dateString;
 
+            // Logout
             document.querySelector('.logout').addEventListener('click', () => {
                 localStorage.removeItem('currentUser');
                 alert('Berhasil logout!');
                 window.location.replace('login.html');
             });
 
+            // Toggle Toolbar
             document.getElementById('toggleToolbar').addEventListener('click', () => {
                 document.getElementById('toolbar').classList.toggle('active');
             });
 
+            // Real-time Clock
             function updateClock() {
                 const now = new Date();
                 const options = { timeZone: 'Asia/Jakarta', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false };
@@ -822,8 +879,10 @@
             updateClock();
             setInterval(updateClock, 1000);
 
+            // Setup Firebase Listener
             setupFirebaseListener();
 
+            // Button Event Listeners
             document.querySelector('.in-btn').addEventListener('click', () => {
                 const selectedSlot = document.getElementById('slotSelect').value;
                 sendSlotMessage(selectedSlot, 'Mobil Masuk', currentUser);
@@ -834,14 +893,25 @@
                 sendSlotMessage(selectedSlot, 'Mobil Keluar', currentUser);
             });
 
+            // Prevent Undo/Redo
             document.addEventListener('keydown', (event) => {
                 if ((event.ctrlKey || event.metaKey) && (event.key === 'z' || event.key === 'y' || event.key === 'Z' || event.key === 'Y')) {
                     event.preventDefault();
-                    event.stopPropagation();
                     console.log('Undo/Redo is disabled');
                 }
             });
 
+            // Prevent Navigation
+            window.addEventListener('popstate', (event) => {
+                event.preventDefault();
+                if (!localStorage.getItem('currentUser')) {
+                    window.location.replace('login.html');
+                } else {
+                    history.replaceState(null, null, window.location.href);
+                }
+            });
+
+            // Tour Event Listeners
             document.getElementById('tourNextBtn').addEventListener('click', () => {
                 currentTourStep++;
                 if (currentTourStep < tourSteps.length) {
@@ -853,6 +923,7 @@
 
             document.getElementById('tourCloseBtn').addEventListener('click', endTour);
 
+            // Start Tour
             startTour();
         });
     </script>
