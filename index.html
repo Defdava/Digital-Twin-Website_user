@@ -527,8 +527,8 @@
                     <div><span>Slots</span><span id="emptySlots">20 / 20</span></div>
                     <div><span>Time</span><span id="currentTime"></span></div>
                     <div><span>Loyalty Customers</span><span>3</span></div>
-                    <div><span>Total Cars In</span><span>74 Today</span></div>
-                    <div><span>Total Cars Out</span><span>32 Today</span></div>
+                    <div><span>Total Cars In</span><span id="totalCarsIn">0 Today</span></div>
+                    <div><span>Total Cars Out</span><span id="totalCarsOut">0 Today</span></div>
                 </div>
             </div>
             <div class="user-details">
@@ -630,6 +630,7 @@
 
         firebase.initializeApp(firebaseConfig);
         const dbRef = firebase.database().ref("slot_parking");
+        const slotHistoryRef = firebase.database().ref("slot_history");
         let slotSizes = {};
 
         // Show Error Message
@@ -692,8 +693,11 @@
 
         // Update Live Overview
         function updateLiveOverview(occupiedCount, emptyCount, totalSlots) {
-            document.getElementById('occupiedSlots').textContent = `${occupiedCount} / ${totalSlots}`;
-            document.getElementById('emptySlots').textContent = `${emptyCount} / ${totalSlots}`;
+            const occupiedElement = document.getElementById('occupiedSlots');
+            const emptyElement = document.getElementById('emptySlots');
+            if (occupiedElement) occupiedElement.textContent = `${occupiedCount} / ${totalSlots}`;
+            if (emptyElement) emptyElement.textContent = `${emptyCount} / ${totalSlots}`;
+            console.log(`🔄 Stats updated: ${occupiedCount} occupied, ${emptyCount} empty`);
         }
 
         // Setup Firebase Listener
@@ -701,6 +705,54 @@
             dbRef.on("value", (snapshot) => {
                 const data = snapshot.val() || {};
                 updateParkingLot(data);
+
+                // Update total cars in and out
+                slotHistoryRef.on("value", (historySnapshot) => {
+                    const historyData = historySnapshot.val();
+                    let historyDataArray = [];
+
+                    if (historyData) {
+                        Object.keys(historyData).forEach((slotKey) => {
+                            const slotLogs = historyData[slotKey];
+                            Object.entries(slotLogs).forEach(([timestamp, entry]) => {
+                                const status = entry.status === true || entry.status === 'terisi' ? 'terisi' : 'kosong';
+                                const slotNumber = slotKey.split("_")[1];
+                                const size = entry.size ? entry.size.charAt(0).toUpperCase() + entry.size.slice(1).toLowerCase() : 'none';
+                                historyDataArray.push({
+                                    slot: slotNumber,
+                                    timestamp: timestamp,
+                                    status: status,
+                                    size: size
+                                });
+                            });
+                        });
+
+                        historyDataArray.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+
+                        const today = new Date().toISOString().split('T')[0];
+                        let totalIn = 0;
+                        let totalOut = 0;
+                        historyDataArray.forEach((entry) => {
+                            const entryDate = entry.timestamp.split(' ')[0];
+                            if (entryDate === today) {
+                                if (entry.status === 'terisi') totalIn++;
+                                else if (entry.status === 'kosong') totalOut++;
+                            }
+                        });
+
+                        document.getElementById('totalCarsIn').textContent = `${totalIn} Today`;
+                        document.getElementById('totalCarsOut').textContent = `${totalOut} Today`;
+                    } else {
+                        console.warn("No slot history data available.");
+                        document.getElementById('totalCarsIn').textContent = '0 Today';
+                        document.getElementById('totalCarsOut').textContent = '0 Today';
+                    }
+                }, (error) => {
+                    console.error("Error fetching slot history:", error);
+                    showError("Failed to fetch slot history data.");
+                    document.getElementById('totalCarsIn').textContent = '0 Today';
+                    document.getElementById('totalCarsOut').textContent = '0 Today';
+                });
             }, (error) => {
                 console.error("❌ Firebase read error:", error);
                 showError("Failed to fetch parking data. Please try again.");
@@ -737,6 +789,11 @@
                 date: dateString,
                 timestamp: timeString,
                 size: size
+            };
+            updates[`slot_history/${slotKey}/${timeString}`] = {
+                status: action === 'Mobil Masuk' ? 'terisi' : 'kosong',
+                size: size,
+                timestamp: timeString
             };
 
             firebase.database().ref().update(updates).then(() => {
